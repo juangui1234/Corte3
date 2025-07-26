@@ -18,7 +18,15 @@ public class IDGenerator {
         return "V" + (++contadorVeterinario); // ✅ Genera V1, V2, ...
     }
     public static String generarCodigoPropietario() {
-        return "P" + (++contadorPropietario);
+        return "P" + String.format("%03d", contadorPropietario++);
     }
+
+    public static void setContadorPropietario(int nuevoValor) {
+        contadorPropietario = nuevoValor;
+    }
+    public static void setContadorVeterinario(int nuevoValor) {
+        contadorPropietario = nuevoValor;
+    }
+
 }
 

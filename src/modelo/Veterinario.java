@@ -1,23 +1,26 @@
 package modelo;
-
+import excepciones.DatoInvalidoException;
 import java.io.Serializable;
 
-/*
- * Clase que representa a un Veterinario en el sistema.
- * Extiende de Persona.
- */
+
 public class Veterinario extends Persona implements Serializable {
     private String especialidad;
     private boolean disponible;
 
-    public Veterinario(String nombre, String identificacion, String telefono, String especialidad, boolean disponible) {
-        super(nombre, identificacion, telefono);
-        this.especialidad = especialidad;
+    public Veterinario(String nombre, String documento, String telefono, String especialidad, boolean disponible) throws DatoInvalidoException {
+        super(nombre, documento, telefono);
+        setEspecialidad(especialidad);
         this.disponible = disponible;
     }
 
     public String getEspecialidad() { return especialidad; }
-    public void setEspecialidad(String especialidad) { this.especialidad = especialidad; }
+
+    public void setEspecialidad(String especialidad) throws DatoInvalidoException {
+        if (especialidad == null || especialidad.trim().isEmpty()) {
+            throw new DatoInvalidoException("La especialidad no puede estar vacía");
+        }
+        this.especialidad = especialidad;
+    }
 
     public boolean isDisponible() { return disponible; }
     public void setDisponible(boolean disponible) { this.disponible = disponible; }
@@ -33,6 +36,13 @@ public class Veterinario extends Persona implements Serializable {
     @Override
     public String getTipo() {
         return "Veterinario";
+    }
+
+    @Override
+    public String mostrarDatos() {
+        return super.mostrarDatos() +
+                "\n📚 Especialidad: " + especialidad +
+                "\n✔ Disponible: " + (disponible ? "Sí" : "No");
     }
 
     @Override

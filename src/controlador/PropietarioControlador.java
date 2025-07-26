@@ -68,7 +68,25 @@ public class PropietarioControlador {
     public void cargarPropietarios() {
         List<PropietarioDTO> listaDTO = propietarioDAO.cargarPropietarios();
         propietarios = convertirDTOaModelo(listaDTO);
+
+        // ✅ ACTUALIZAMOS IDGenerator con el último código usado
+        int max = 0;
+        for (Propietario p : propietarios) {
+            try {
+                String codigo = p.getCodigo(); // Ej: "P004"
+                if (codigo != null && codigo.startsWith("P")) {
+                    int numero = Integer.parseInt(codigo.substring(1)); // Extrae 004 → 4
+                    if (numero > max) {
+                        max = numero;
+                    }
+                }
+            } catch (NumberFormatException e) {
+                System.err.println("⚠️ Código inválido en propietario: " + p.getCodigo());
+            }
+        }
+        IDGenerator.setContadorPropietario(max + 1); // Actualiza el contador
     }
+
 
     // 🔁 Conversión de modelo a DTO
     private List<PropietarioDTO> convertirModeloaDTO(List<Propietario> listaModelo) {
@@ -78,7 +96,8 @@ public class PropietarioControlador {
                     p.getNombre(),
                     p.getDocumento(),
                     p.getTelefono(),
-                    p.getDireccion()
+                    p.getDireccion(),
+                    p.getCodigo() // ✅ Agregar código al DTO
             ));
         }
         return listaDTO;
@@ -89,12 +108,14 @@ public class PropietarioControlador {
         ArrayList<Propietario> listaModelo = new ArrayList<>();
         for (PropietarioDTO dto : listaDTO) {
             try {
-                listaModelo.add(new Propietario(
+                Propietario propietario = new Propietario(
                         dto.getNombre(),
                         dto.getDocumento(),
                         dto.getTelefono(),
                         dto.getDireccion()
-                ));
+                );
+                propietario.setCodigo(dto.getCodigo()); // ✅ Recuperar código
+                listaModelo.add(propietario);
             } catch (DatoInvalidoException e) {
                 System.err.println("❌ Error al cargar propietario desde DTO: " + e.getMessage());
             }

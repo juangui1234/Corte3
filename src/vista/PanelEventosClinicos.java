@@ -1,4 +1,4 @@
-package vista;
+/*package vista;
 
 import modelo.*;
 
@@ -75,3 +75,4 @@ public class PanelEventosClinicos extends JPanel {
         areaEventos.setText(sb.toString());
     }
 }
+*/

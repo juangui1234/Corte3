@@ -1,7 +1,4 @@
 package dto;
-
-import dto.PersonaDTO;
-
 import java.io.Serializable;
 
 
