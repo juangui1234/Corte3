@@ -1,4 +1,4 @@
-package src.vista;
+/*package vista;
 
 import controlador.PropietarioControlador;
 import modelo.Propietario;
@@ -52,3 +52,4 @@ public class PanelGestionPropietarios extends JInternalFrame {
         }
     }
 }
+*/

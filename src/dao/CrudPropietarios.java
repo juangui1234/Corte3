@@ -1,4 +1,4 @@
-package src.dao;
+/*package dao;
 import modelo.*;
 
 import java.util.ArrayList;
@@ -37,4 +37,4 @@ public class CrudPropietarios {
         }
         return false;
     }
-}
+}*/

@@ -1,42 +1,115 @@
-package src.controlador;
-
+package controlador;
+import util.IDGenerator;
 import dao.PropietarioDAO;
 import dto.PropietarioDTO;
+import excepciones.DatoInvalidoException;
+import excepciones.ErrorPersistenciaException;
 import modelo.Propietario;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PropietarioControlador {
-    private PropietarioDAO dao = new PropietarioDAO();
+    private ArrayList<Propietario> propietarios;
+    private PropietarioDAO propietarioDAO;
 
-    public void registrar(PropietarioDTO dto) {
-        validar(dto);
-        Propietario p = new Propietario(dto.getNombre(), dto.getDocumento(), dto.getTelefono(), dto.getDireccion());
-        dao.guardar(p);
+    public PropietarioControlador() {
+        propietarioDAO = new PropietarioDAO();
+        propietarios = new ArrayList<>();
+        cargarPropietarios(); // Cargar desde archivo al iniciar
     }
 
-    public List<Propietario> obtenerPropietarios() {
-        return dao.listar();
+    public boolean agregarPropietario(String nombre, String documento, String telefono, String direccion) {
+        try {
+            String codigo = IDGenerator.generarCodigoPropietario(); // ✅ genera el código único
+
+            Propietario nuevo = new Propietario(nombre, documento, telefono, direccion);
+            nuevo.setCodigo(codigo); // ✅ le asignamos el código
+
+            propietarios.add(nuevo); // ✅ lo agregamos a la lista
+            guardarPropietarios();   // ✅ guardamos la lista
+            return true;
+        } catch (DatoInvalidoException e) {
+            System.err.println("Error al agregar propietario: " + e.getMessage());
+            return false;
+        }
     }
 
-    public void eliminar(String documento) {
-        dao.eliminarPorDocumento(documento);
+    public ArrayList<Propietario> getPropietarios() {
+        return propietarios;
     }
 
-    public void actualizar(String docClave, PropietarioDTO dto) {
-        validar(dto);
-        Propietario nuevo = new Propietario(dto.getNombre(), dto.getDocumento(), dto.getTelefono(), dto.getDireccion());
-        dao.actualizar(docClave, nuevo);
+    public Propietario buscarPorIdentificacion(String id) {
+        for (Propietario p : propietarios) {
+            if (p.getDocumento().equalsIgnoreCase(id)) {
+                return p;
+            }
+        }
+        return null;
     }
 
-    private void validar(PropietarioDTO dto) {
-        if (dto.getNombre() == null || dto.getNombre().isBlank())
-            throw new IllegalArgumentException("El nombre no puede estar vacío.");
-        if (dto.getDocumento() == null || dto.getDocumento().isBlank())
-            throw new IllegalArgumentException("El documento no puede estar vacío.");
-        if (dto.getTelefono() == null || dto.getTelefono().length() < 7)
-            throw new IllegalArgumentException("El teléfono es inválido.");
-        if (dto.getDireccion() == null || dto.getDireccion().isBlank())
-            throw new IllegalArgumentException("La dirección no puede estar vacía.");
+    public void eliminarPropietario(String id) {
+        Propietario p = buscarPorIdentificacion(id);
+        if (p != null) {
+            propietarios.remove(p);
+            guardarPropietarios();
+        }
+    }
+
+    public void guardarPropietarios() {
+        List<PropietarioDTO> listaDTO = convertirModeloaDTO(propietarios);
+        try {
+            propietarioDAO.guardarPropietarios(listaDTO);
+        } catch (ErrorPersistenciaException e) {
+            System.err.println("❌ Error al guardar propietarios: " + e.getMessage());
+        }
+    }
+
+    public void cargarPropietarios() {
+        List<PropietarioDTO> listaDTO = propietarioDAO.cargarPropietarios();
+        propietarios = convertirDTOaModelo(listaDTO);
+    }
+
+    // 🔁 Conversión de modelo a DTO
+    private List<PropietarioDTO> convertirModeloaDTO(List<Propietario> listaModelo) {
+        List<PropietarioDTO> listaDTO = new ArrayList<>();
+        for (Propietario p : listaModelo) {
+            listaDTO.add(new PropietarioDTO(
+                    p.getNombre(),
+                    p.getDocumento(),
+                    p.getTelefono(),
+                    p.getDireccion()
+            ));
+        }
+        return listaDTO;
+    }
+
+    // 🔁 Conversión de DTO a modelo
+    private ArrayList<Propietario> convertirDTOaModelo(List<PropietarioDTO> listaDTO) {
+        ArrayList<Propietario> listaModelo = new ArrayList<>();
+        for (PropietarioDTO dto : listaDTO) {
+            try {
+                listaModelo.add(new Propietario(
+                        dto.getNombre(),
+                        dto.getDocumento(),
+                        dto.getTelefono(),
+                        dto.getDireccion()
+                ));
+            } catch (DatoInvalidoException e) {
+                System.err.println("❌ Error al cargar propietario desde DTO: " + e.getMessage());
+            }
+        }
+        return listaModelo;
+    }
+    public Object[][] obtenerDatosParaTabla() {
+        Object[][] datos = new Object[propietarios.size()][4];
+        for (int i = 0; i < propietarios.size(); i++) {
+            Propietario p = propietarios.get(i);
+            datos[i][0] = p.getNombre();
+            datos[i][1] = p.getDocumento();
+            datos[i][2] = p.getTelefono();
+            datos[i][3] = p.getDireccion();
+        }
+        return datos;
     }
 }

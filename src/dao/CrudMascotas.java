@@ -1,4 +1,4 @@
-package src.dao;
+package dao;
 
 import modelo.*;
 

@@ -1,4 +1,4 @@
-package src.vista;
+/*package vista;
 
 import controlador.MascotaControlador;
 import controlador.PropietarioControlador;
@@ -80,3 +80,4 @@ public class FormularioPaciente extends JInternalFrame {
         add(btnRegistrar);
     }
 }
+*/

@@ -1,6 +1,6 @@
-package src;
 
-import vista.VentanaPrincipal;
+
+/*import vista.VentanaPrincipal;
 
 import javax.swing.*;
 

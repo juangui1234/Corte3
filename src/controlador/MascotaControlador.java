@@ -1,4 +1,4 @@
-package src.controlador;
+package controlador;
 
 import dao.MascotaDAO;
 import dto.MascotaDTO;

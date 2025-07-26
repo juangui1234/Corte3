@@ -1,16 +1,15 @@
-package modelo;
+package dto;
+
+import dto.PersonaDTO;
 
 import java.io.Serializable;
 
-/*
- * Clase que representa a un Veterinario en el sistema.
- * Extiende de Persona.
- */
-public class Veterinario extends Persona implements Serializable {
+
+public class VeterinarioDTO extends PersonaDTO implements Serializable {
     private String especialidad;
     private boolean disponible;
 
-    public Veterinario(String nombre, String identificacion, String telefono, String especialidad, boolean disponible) {
+    public VeterinarioDTO(String nombre, String identificacion, String telefono, String especialidad, boolean disponible) {
         super(nombre, identificacion, telefono);
         this.especialidad = especialidad;
         this.disponible = disponible;
@@ -21,14 +20,6 @@ public class Veterinario extends Persona implements Serializable {
 
     public boolean isDisponible() { return disponible; }
     public void setDisponible(boolean disponible) { this.disponible = disponible; }
-
-    public String mostrarInformacion() {
-        return "👨‍⚕ Veterinario: " + getNombre() +
-                "\n🆔 Documento: " + getDocumento() +
-                "\n📞 Teléfono: " + getTelefono() +
-                "\n📚 Especialidad: " + especialidad +
-                "\n✔ Disponible: " + (disponible ? "Sí" : "No");
-    }
 
     @Override
     public String getTipo() {

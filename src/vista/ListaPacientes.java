@@ -1,9 +1,9 @@
-package src.vista;
+package vista;
 
 import controlador.MascotaControlador;
 import controlador.PropietarioControlador;
 import dao.CrudMascotas;
-import dao.CrudPropietarios;
+//import dao.CrudPropietarios;
 import modelo.Mascota;
 import modelo.Propietario;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public class ListaPacientes extends JInternalFrame {
 
     private CrudMascotas crudMascotas;
-    private CrudPropietarios crudPropietarios;
+    //private CrudPropietarios crudPropietarios;
     private JTable tabla;
     private DefaultTableModel modelo;
     private JProgressBar barraCarga;
@@ -25,7 +25,7 @@ public class ListaPacientes extends JInternalFrame {
     public ListaPacientes(MascotaControlador mascotaControlador, PropietarioControlador propietarioControlador) {
         super("Lista de pacientes", true, true, true, true);
         this.crudMascotas = crudMascotas;
-        this.crudPropietarios = crudPropietarios;
+        //this.crudPropietarios = crudPropietarios;
         this.mascotaControlador = mascotaControlador;
         this.propietarioControlador = propietarioControlador;
 
@@ -72,7 +72,7 @@ public class ListaPacientes extends JInternalFrame {
         List<Mascota> lista = controlador.obtenerMascotas();
         modelo.setRowCount(0); //limpia la tabla
 
-        for (Mascota m : lista) {
+        /*for (Mascota m : lista) {
             // Buscar propietario asociado a la mascota con el archivo txt
             String propietarioNombre = obtenerPropietarioDeMascota(m);
             modelo.addRow(new Object[]{
@@ -81,13 +81,13 @@ public class ListaPacientes extends JInternalFrame {
                     m.getEdad(),
                     propietarioNombre
             });
-        }
+        }*/
 
         barraCarga.setValue(100);
         barraCarga.setString("Datos cargados");
     }
 
-    private String obtenerPropietarioDeMascota(Mascota mascota) {
+    /*private String obtenerPropietarioDeMascota(Mascota mascota) {
         for (Propietario p : crudPropietarios.getTodos()) {
             if (p != null && p.getNombre() != null) {
                 if (p.getMascotas() != null && p.getMascotas().contains(mascota)) {
@@ -96,5 +96,5 @@ public class ListaPacientes extends JInternalFrame {
             }
         }
         return "Desconocido";
-    }
+    }*/
 }

@@ -1,4 +1,4 @@
-package src.persistencia;
+package persistencia;
 
 import java.io.*;
 import java.util.ArrayList;

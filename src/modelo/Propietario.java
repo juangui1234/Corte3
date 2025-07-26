@@ -1,26 +1,37 @@
-package src.modelo;
+package modelo;
 
+import excepciones.DatoInvalidoException;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Propietario extends Persona {
+public class Propietario extends Persona implements Serializable {
     private String direccion;
+    private String codigo;
     private ArrayList<Mascota> mascotas;
 
-    public Propietario(String nombre, String documento, String telefono, String direccion) {
-        super(nombre, documento, telefono); // llamada al constructor de Modelo.PersonaDTO
+    public Propietario(String nombre, String documento, String telefono, String direccion) throws DatoInvalidoException  {
+        super(nombre, documento, telefono);
         setDireccion(direccion);
         this.mascotas = new ArrayList<>();
     }
 
+    // Métodos de lógica de dominio
     public void agregarMascota(Mascota mascota) {
         mascotas.add(mascota);
     }
 
     public void mostrarInformacion() {
-        System.out.println("👤 Modelo.Propietario: " + getNombre());
-        System.out.println("🆔 Documento: " + getDocumento());
-        System.out.println("📞 Teléfono: " + getTelefono());
+        System.out.println(super.mostrarDatos());
         System.out.println("🏠 Dirección: " + direccion);
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public void mostrarMascotas() {
@@ -37,9 +48,55 @@ public class Propietario extends Persona {
     }
 
     // Getters y Setters
-    public ArrayList<Mascota> getMascotas() {
-        return mascotas;
+/*    public String getTelefono() { return telefono; }
+
+    public void setTelefono(String telefono) {
+        if (telefono == null || telefono.length() < 7) {
+            throw new IllegalArgumentException("Teléfono inválido.");
+        }
+        this.telefono = telefono;
+    }*/
+
+    public String getDireccion() { return direccion; }
+
+    public void setDireccion(String direccion) throws DatoInvalidoException {
+        if (direccion == null || direccion.isBlank()) {
+            throw new DatoInvalidoException("La dirección no puede estar vacía.");
+        }
+        this.direccion = direccion;
     }
+
+   /* public void setDireccion(String direccion) {
+        if (direccion == null || direccion.isBlank()) {
+            throw new IllegalArgumentException("Dirección inválida.");
+        }
+        this.direccion = direccion;
+    }*/
+
+    public ArrayList<Mascota> getMascotas() { return mascotas; }
+/*
+    // Serialización manual para guardar en archivos
+    public String toLineaArchivo() {
+        return getNombre() + ";" + getIdentificacion() + ";" + telefono + ";" + direccion;
+    }
+
+    public static Propietario desdeLineaArchivo(String linea) {
+        String[] partes = linea.split(";");
+        if (partes.length != 4) return null;
+        return new Propietario(partes[0], partes[1], partes[2], partes[3]);
+    }*/
+
+    @Override
+    public String getTipo() {
+        return "Propietario";
+    }
+
+    @Override
+    public String toString() {
+        return getTipo() + " - " + getNombre() + " (" + getDocumento() + ") - Teléfono: " + getTelefono();
+    }
+}
+
 
    /* public String getTelefono() {
         return telefono;
@@ -51,34 +108,3 @@ public class Propietario extends Persona {
         }
         this.telefono = telefono;
     }*/
-
-    public String getDireccion() {
-        return direccion;
-    }
-
-    public void setDireccion(String direccion) {
-        if (direccion == null || direccion.isBlank()) {
-            throw new IllegalArgumentException("Dirección inválida.");
-        }
-        this.direccion = direccion;
-    }
-
-    public String toLineaArchivo() {
-        return getNombre() + ";" + getDocumento() + ";" + getTelefono() + ";" + getDireccion();
-    }
-
-    public static Propietario desdeLineaArchivo(String linea) {
-        String[] partes = linea.split(";");
-        if (partes.length != 4) return null;
-        try {
-            return new Propietario(partes[0], partes[1], partes[2], partes[3]);
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
-
-    @Override
-    public String toString() {
-        return getNombre() + " (" + getDocumento() + ")";
-    }
-}

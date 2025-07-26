@@ -1,4 +1,4 @@
-package src.vista;
+package vista;
 
 import modelo.*;
 

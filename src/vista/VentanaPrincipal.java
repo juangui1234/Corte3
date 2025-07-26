@@ -1,4 +1,4 @@
-package src.vista;
+/*package vista;
 
 import controlador.*;
 import dao.*;
@@ -125,7 +125,7 @@ public class VentanaPrincipal extends JFrame {
         //menu propietarios
         JMenuItem itemPropietarios = new JMenuItem("Registrar Propietario");
         itemPropietarios.addActionListener(_ -> {
-            PanelRegistrarPropietario panel = new PanelRegistrarPropietario(propietarioControlador);
+            PanelPropietarios panel = new PanelPropietarios(propietarioControlador);
             desktopPane.add(panel);
             panel.setVisible(true);
         });
@@ -179,4 +179,4 @@ public class VentanaPrincipal extends JFrame {
             ventana.setVisible(true);
         });
     }
-}
+}*/
