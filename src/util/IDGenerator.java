@@ -7,25 +7,25 @@ public class IDGenerator {
     private static int contadorPropietario = 0;
 
     public static String generarCodigoConsulta() {
-        return "C" + (++contadorConsulta);
+        return "CON" + (++contadorConsulta);
     }
 
     public static String generarCodigoMascota() {
-        return "M" + (++contadorMascota);
+        return "MAS" + (++contadorMascota);
     }
 
     public static String generarCodigoVeterinario() {
-        return "V" + (++contadorVeterinario); // ✅ Genera V1, V2, ...
+        return "VET" + String.format("%03d", contadorVeterinario++);
     }
     public static String generarCodigoPropietario() {
-        return "P" + String.format("%03d", contadorPropietario++);
+        return "PRO" + String.format("%03d", contadorPropietario++);
     }
 
     public static void setContadorPropietario(int nuevoValor) {
         contadorPropietario = nuevoValor;
     }
     public static void setContadorVeterinario(int nuevoValor) {
-        contadorPropietario = nuevoValor;
+        contadorVeterinario = nuevoValor;
     }
 
 }

@@ -113,14 +113,14 @@ public class VentanaPrincipal extends JFrame {
             desktopPane.add(panel);
             panel.setVisible(true);
         });
-        JMenuItem itemVeterinariosArchivo = new JMenuItem("Gestión Veterinarios");
+        JMenuItem itemVeterinariosArchivo = new JMenuItem("Registrar Veterinarios");
         itemVeterinariosArchivo.addActionListener(_ -> {
             PanelVeterinarios panel = new PanelVeterinarios();
             desktopPane.add(panel);
             panel.setVisible(true);
         });
         menuArchivo.add(itemVeterinariosArchivo);
-        JMenuItem itemRegistrarConsulta = new JMenuItem("Registrar ConsultaVeterinaria");
+        JMenuItem itemRegistrarConsulta = new JMenuItem("Registrar Consulta Veterinaria");
         itemRegistrarConsulta.addActionListener(_ -> {
             PanelRegistrarConsulta panel = new PanelRegistrarConsulta(
                     crudMascotas.getMascotas(),
