@@ -1,4 +1,39 @@
 package dao;
+
+import dto.PropietarioDTO;
+import persistencia.GestorPersistencia;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+public class PropietarioDAO {
+
+    private final String archivo = "data/propietarios.dat";
+    private final GestorPersistencia gestor;
+
+    public PropietarioDAO() {
+        this.gestor = GestorPersistencia.getInstance();
+        File carpeta = new File("data");
+        if (!carpeta.exists()) {
+            carpeta.mkdirs(); // Asegura que la carpeta exista
+        }
+    }
+
+    // Guarda la lista completa de propietarios
+    public void guardarPropietarios(List<PropietarioDTO> propietarios) {
+        gestor.guardarLista(archivo, propietarios);
+    }
+
+    // Carga y devuelve la lista de propietarios
+    public List<PropietarioDTO> cargarPropietarios() {
+        List<PropietarioDTO> lista = gestor.cargarLista(archivo);
+        return (lista != null) ? lista : new ArrayList<>();
+    }
+}
+
+
+/*package dao;
 import excepciones.*;
 import dto.PropietarioDTO;
 
@@ -6,9 +41,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- *clase DAO para manejar la persistencia de objetos Propietario en archivo .dat
- */
+clase DAO para manejar la persistencia de objetos Propietario en archivo .dat
+
 public class PropietarioDAO {
     private final String archivo = "data/propietarios.dat";
 
@@ -44,4 +78,4 @@ public class PropietarioDAO {
 
         return propietarios;
     }
-}
+}*/

@@ -1,12 +1,14 @@
 package modelo;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Mascota {
+public class Mascota implements Serializable {
     private String nombre;
     private String especie;
     private int edad;
+    private String codigo;
+
     private List<EventoClinico> historial = new ArrayList<>();
     public Mascota(String nombre, String especie, int edad) {
         this.nombre = nombre;
@@ -91,6 +93,13 @@ public class Mascota {
         return nombre;
     }
 
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
     public String toLineaArchivo() {
         return nombre + "," + especie + "," + edad;
     }

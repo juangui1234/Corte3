@@ -58,35 +58,20 @@ public class PropietarioControlador {
 
     public void guardarPropietarios() {
         List<PropietarioDTO> listaDTO = convertirModeloaDTO(propietarios);
-        try {
-            propietarioDAO.guardarPropietarios(listaDTO);
-        } catch (ErrorPersistenciaException e) {
-            System.err.println("❌ Error al guardar propietarios: " + e.getMessage());
+        propietarioDAO.guardarPropietarios(listaDTO);
         }
-    }
 
     public void cargarPropietarios() {
         List<PropietarioDTO> listaDTO = propietarioDAO.cargarPropietarios();
         propietarios = convertirDTOaModelo(listaDTO);
 
-        // ✅ ACTUALIZAMOS IDGenerator con el último código usado
-        int max = 0;
+        //evitamos codigos duplicados
+        List<String> codigos = new ArrayList<>();
         for (Propietario p : propietarios) {
-            try {
-                String codigo = p.getCodigo(); // Ej: "P004"
-                if (codigo != null && codigo.startsWith("P")) {
-                    int numero = Integer.parseInt(codigo.substring(1)); // Extrae 004 → 4
-                    if (numero > max) {
-                        max = numero;
-                    }
-                }
-            } catch (NumberFormatException e) {
-                System.err.println("⚠️ Código inválido en propietario: " + p.getCodigo());
-            }
+            codigos.add(p.getCodigo());
         }
-        IDGenerator.setContadorPropietario(max + 1); // Actualiza el contador
+        IDGenerator.inicializarDesdeDatos(codigos, "P-");
     }
-
 
     // 🔁 Conversión de modelo a DTO
     private List<PropietarioDTO> convertirModeloaDTO(List<Propietario> listaModelo) {

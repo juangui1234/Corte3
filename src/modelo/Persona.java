@@ -21,7 +21,7 @@ public abstract class Persona implements Serializable {
     public void setDocumento(String documento) { this.documento = documento; }
     public void setTelefono(String telefono) { this.telefono = telefono; }
 
-    // Metodo abstracto para implementar en subclases
+    //Metodo abstracto para implementar en subclases
     public abstract String getTipo();
 
     public String mostrarDatos() {

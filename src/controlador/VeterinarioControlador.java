@@ -16,17 +16,13 @@ public class VeterinarioControlador {
         dao = new VeterinarioDAO();
         listaVeterinarios = dao.cargarVeterinarios(); // Cargar desde archivo
 
-        // 🔧 Ajustar el contador del IDGenerator según el último ID guardado
-        int max = 0;
+        List<String> codigos = new ArrayList<>();
         for (Veterinario v : listaVeterinarios) {
-            String id = v.getDocumento().replace("VET", "");
-            try {
-                int num = Integer.parseInt(id);
-                if (num > max) max = num;
-            } catch (NumberFormatException ignored) {}
+            codigos.add(v.getDocumento());
         }
-        IDGenerator.setContadorVeterinario(max + 1); // Para evitar duplicados
-    }
+        IDGenerator.inicializarDesdeDatos(codigos, "V-");
+
+        }
 
     // Agregar
     public void agregar(String nombre, String telefono, String especialidad, boolean disponible) {

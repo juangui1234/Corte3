@@ -1,14 +1,38 @@
 package dao;
 
 import modelo.Veterinario;
+import persistencia.GestorPersistencia;
+
+import java.util.List;
+//dao con persistencia
+public class VeterinarioDAO {
+    private final String archivo = "data/veterinarios.dat";
+    private final GestorPersistencia gestor;
+
+    public VeterinarioDAO() {
+        this.gestor = GestorPersistencia.getInstance(); // Usar singleton
+    }
+
+    public void guardarVeterinarios(List<Veterinario> lista) {
+        gestor.guardarLista(archivo, lista); // delega al Gestor
+    }
+
+    public List<Veterinario> cargarVeterinarios() {
+        return gestor.cargarLista(archivo); // delega al Gestor
+    }
+}
+
+
+/*package dao;
+
+import modelo.Veterinario;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
- * Clase DAO para manejar la persistencia de objetos Veterinario en archivo .dat
- */
+Clase DAO para manejar la persistencia de objetos Veterinario en archivo .dat
+
 public class VeterinarioDAO {
     private final String archivo = "data/veterinarios.dat";
 
@@ -44,4 +68,4 @@ public class VeterinarioDAO {
 
         return veterinarios;
     }
-}
+}*/
