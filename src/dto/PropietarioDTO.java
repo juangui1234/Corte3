@@ -29,6 +29,10 @@ public class PropietarioDTO extends PersonaDTO implements Serializable {
         mascotas.add(mascota);
     }
 
+    public ArrayList<MascotaDTO> getMascotas() {
+        return mascotas;
+    }
+
     public void setCodigo(String codigo) {
         this.codigo = codigo;
     }

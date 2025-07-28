@@ -1,21 +1,19 @@
-/*package vista;
+package vista;
 
 import controlador.MascotaControlador;
 import controlador.PropietarioControlador;
-import dao.CrudMascotas;
-//import dao.CrudPropietarios;
-import modelo.Mascota;
+import dto.MascotaDTO;
+import dto.PropietarioDTO;
 import modelo.Propietario;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.util.List;
 
 public class ListaPacientes extends JInternalFrame {
 
-    private CrudMascotas crudMascotas;
-    //private CrudPropietarios crudPropietarios;
     private JTable tabla;
     private DefaultTableModel modelo;
     private JProgressBar barraCarga;
@@ -24,14 +22,11 @@ public class ListaPacientes extends JInternalFrame {
 
     public ListaPacientes(MascotaControlador mascotaControlador, PropietarioControlador propietarioControlador) {
         super("Lista de pacientes", true, true, true, true);
-        this.crudMascotas = crudMascotas;
-        //this.crudPropietarios = crudPropietarios;
         this.mascotaControlador = mascotaControlador;
         this.propietarioControlador = propietarioControlador;
 
         setSize(600, 400);
         setLayout(new BorderLayout());
-        setClosable(true);
         setDefaultCloseOperation(HIDE_ON_CLOSE);
 
         modelo = new DefaultTableModel(new String[]{"Nombre", "Especie", "Edad", "Propietario"}, 0);
@@ -52,29 +47,25 @@ public class ListaPacientes extends JInternalFrame {
 
         Timer timer = new Timer(30, null); // 30 ms por ciclo
         final int[] progreso = {0};
-        timer.addActionListener(e -> {
+        timer.addActionListener((ActionEvent e) -> {
             if (progreso[0] >= 100) {
                 ((Timer) e.getSource()).stop();
-
-                crudMascotas.getMascotas();
+                llenarTabla();
+                barraCarga.setString("Datos cargados");
             } else {
                 progreso[0] += 5;
                 barraCarga.setValue(progreso[0]);
-                llenarTabla();
             }
         });
         timer.start();
     }
 
     private void llenarTabla() {
+        modelo.setRowCount(0);
+        List<MascotaDTO> listaMascotas = mascotaControlador.obtenerMascotas();
 
-        MascotaControlador controlador = new MascotaControlador(); // Asegúrate de importar bien
-        List<Mascota> lista = controlador.obtenerMascotas();
-        modelo.setRowCount(0); //limpia la tabla
-
-        /*for (Mascota m : lista) {
-            // Buscar propietario asociado a la mascota con el archivo txt
-            String propietarioNombre = obtenerPropietarioDeMascota(m);
+        for (MascotaDTO m : listaMascotas) {
+            String propietarioNombre = obtenerPropietarioDeMascota(m.getNombre());
             modelo.addRow(new Object[]{
                     m.getNombre(),
                     m.getEspecie(),
@@ -82,19 +73,18 @@ public class ListaPacientes extends JInternalFrame {
                     propietarioNombre
             });
         }
-
-        barraCarga.setValue(100);
-        barraCarga.setString("Datos cargados");
     }
 
-    /*private String obtenerPropietarioDeMascota(Mascota mascota) {
-        for (Propietario p : crudPropietarios.getTodos()) {
-            if (p != null && p.getNombre() != null) {
-                if (p.getMascotas() != null && p.getMascotas().contains(mascota)) {
-                    return p.getNombre();
+    private String obtenerPropietarioDeMascota(String nombreMascota) {
+        for (dto.PropietarioDTO p : propietarioControlador.obtenerPropietarios()) {
+            if (p.getMascotas() != null) {
+                for (dto.MascotaDTO m : p.getMascotas()) {
+                    if (m.getNombre().equalsIgnoreCase(nombreMascota)) {
+                        return p.getNombre();
+                    }
                 }
             }
         }
         return "Desconocido";
     }
-}*/
+}

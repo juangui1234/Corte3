@@ -52,18 +52,18 @@ public class VentanaPrincipal extends JFrame {
         //Vacunas
         JMenuItem itemVacunas = new JMenuItem("Vacunas");
         itemVacunas.addActionListener(_ -> {
-            PanelVacunas panel = new PanelVacunas();
+            PanelVacunas panel = new PanelVacunas(mascotaControlador);
             desktopPane.add(panel);
             panel.setVisible(true);
         });
 
-        /* Pacientes
+        //Pacientes
         JMenuItem itemPacientes = new JMenuItem("Pacientes");
         itemPacientes.addActionListener(_ -> {
             ListaPacientes lista = new ListaPacientes(mascotaControlador, propietarioControlador);
             desktopPane.add(lista);
             lista.setVisible(true);
-        });*/
+        });
 
         // Veterinarios
         JMenuItem itemVeterinarios = new JMenuItem("Gestión Veterinarios");
@@ -73,11 +73,11 @@ public class VentanaPrincipal extends JFrame {
             panel.setVisible(true);
         });
 
-        // Agregamos al menú Vista
+       // Agregamos al menú Vista
        // menuVista.add(itemGestion);
         menuVista.add(itemVacunas);
-       // menuVista.add(itemPacientes);
-         menuVista.add(itemVeterinarios);
+       menuVista.add(itemPacientes);
+       menuVista.add(itemVeterinarios);
 
         // Agregar menús a la barra
         menuBar.add(menuArchivo);
