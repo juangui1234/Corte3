@@ -1,10 +1,13 @@
 package modelo;
 
+import dto.ConsultaDTO;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
-
+import util.IDGenerator;
 public class Consulta extends EventoClinico implements Serializable {
+
+    private String idConsulta; // ID generado
     private String diagnostico;
     private String tratamiento;
     private List<String> medicamentos;
@@ -14,10 +17,16 @@ public class Consulta extends EventoClinico implements Serializable {
                     String diagnostico, String tratamiento,
                     List<String> medicamentos, Veterinario veterinario) {
         super(fecha, mascota, descripcion);
+        this.idConsulta = IDGenerator.generarCodigoConsulta(); // Generar ID tipo: "C-"
         this.diagnostico = diagnostico;
         this.tratamiento = tratamiento;
         this.medicamentos = medicamentos;
         this.veterinario = veterinario;
+    }
+
+    // ✅ Getters y Setters
+    public String getIdConsulta() {
+        return idConsulta;
     }
 
     public String getDiagnostico() {
@@ -52,6 +61,11 @@ public class Consulta extends EventoClinico implements Serializable {
         this.veterinario = veterinario;
     }
 
+    // ✅ Método requerido por el DTO
+    public String getCodigo() {
+        return this.idConsulta;
+    }
+
     @Override
     public String mostrarDetalle() {
         return "Consulta veterinaria de " + mascota.getNombre() + " el " + fecha +
@@ -60,5 +74,18 @@ public class Consulta extends EventoClinico implements Serializable {
                 "\nTratamiento: " + tratamiento +
                 "\nMedicamentos: " + String.join(", ", medicamentos) +
                 "\nDescripción: " + descripcion;
+    }
+
+    // ✅ Conversión a DTO
+    public ConsultaDTO toDTO() {
+        return new ConsultaDTO(
+                this.getCodigo(),
+                this.getFecha(),
+                this.getMascota().getNombre(),
+                this.getDescripcion(),
+                this.getVeterinario().getDocumento(),
+                this.getVeterinario().getNombre(),
+                this.getVeterinario().getEspecialidad()
+        );
     }
 }

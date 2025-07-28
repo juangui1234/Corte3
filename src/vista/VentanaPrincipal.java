@@ -1,7 +1,6 @@
 package vista;
 
 import controlador.*;
-import dao.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -112,8 +111,7 @@ public class VentanaPrincipal extends JFrame {
 
         JMenuItem itemConsulta = new JMenuItem("Registrar Consulta");
         itemConsulta.addActionListener(_ -> {
-            PanelConsulta panel = new PanelConsulta(mascotaControlador.obtenerMascotas(),  veterinarioControlador.getListaVeterinarios(),
-                    consultaControlador);
+            PanelConsulta panel = new PanelConsulta();
             desktopPane.add(panel);
             panel.setVisible(true);
         });

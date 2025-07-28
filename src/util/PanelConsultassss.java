@@ -10,7 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
-public class PanelConsultas extends JPanel {
+public class PanelConsultassss extends JPanel {
 
     private JTable tablaConsultas;
     private DefaultTableModel modeloTabla;
@@ -20,7 +20,7 @@ public class PanelConsultas extends JPanel {
     private List<Mascota> listaMascotas;              // 🆕
     private List<Veterinario> listaVeterinarios;      // 🆕
 
-    public PanelConsultas(List<Mascota> listaMascotas, List<Veterinario> listaVeterinarios, ConsultaControlador consultaControlador) {
+    public PanelConsultassss(List<Mascota> listaMascotas, List<Veterinario> listaVeterinarios, ConsultaControlador consultaControlador) {
         this.consultaControlador = consultaControlador;
         this.listaMascotas = listaMascotas;                 // 🆕
         this.listaVeterinarios = listaVeterinarios;         // 🆕

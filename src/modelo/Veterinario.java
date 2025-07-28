@@ -37,7 +37,9 @@ public class Veterinario extends Persona implements Serializable {
     public String getTipo() {
         return "Veterinario";
     }
-
+    public String getCodigo() {
+        return getDocumento();  //cambia a otro campo único
+    }
     @Override
     public String mostrarDatos() {
         return super.mostrarDatos() +

@@ -1,76 +1,71 @@
 package controlador;
 
+import dao.ConsultaDAO;
 import dto.ConsultaDTO;
 import modelo.Veterinario;
 import util.IDGenerator;
 
-import java.io.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ConsultaControlador {
 
-    private List<ConsultaDTO> listaConsultas;
-    private final String archivo = "consultas.dat";
+    private final ConsultaDAO consultaDAO;
+    private final List<ConsultaDTO> listaConsultas;
 
     public ConsultaControlador() {
-        listaConsultas = cargarConsultas();
+        this.consultaDAO = new ConsultaDAO();
+        this.listaConsultas = consultaDAO.cargarConsultas();
+
+        // Inicializar generador de ID si se desea
+        IDGenerator.inicializarDesdeDatos(
+                listaConsultas.stream().map(ConsultaDTO::getIdConsulta).toList(),
+                "C-"
+        );
     }
 
-    public boolean registrarConsulta(LocalDate fecha, String nombreMascota, String descripcion,
+    public boolean registrarConsulta(LocalDate fecha, String nombreMascota,  String medicamentos, String descripcion,
                                      Veterinario veterinarioSeleccionado) {
-
-        if (veterinarioSeleccionado == null || !veterinarioSeleccionado.isDisponible()) {
-            return false; // Veterinario no disponible
-        }
+        validar(veterinarioSeleccionado, nombreMascota, descripcion);
 
         String idConsulta = IDGenerator.generarCodigoConsulta();
         ConsultaDTO nueva = new ConsultaDTO(
-                idConsulta,
-                fecha,
-                nombreMascota,
-                descripcion,
+                idConsulta, fecha, nombreMascota, descripcion,
                 veterinarioSeleccionado.getDocumento(),
                 veterinarioSeleccionado.getNombre(),
                 veterinarioSeleccionado.getEspecialidad()
-        );
 
+        );
+        nueva.setMedicamentos(medicamentos);
         listaConsultas.add(nueva);
-        guardarConsultas();
+        consultaDAO.guardarConsultas(listaConsultas);
         return true;
     }
 
     public List<ConsultaDTO> obtenerConsultas() {
-        return listaConsultas;
+        return List.copyOf(listaConsultas); // Inmutable
+    }
+    public void eliminarConsultaPorID(String idConsulta) {
+        listaConsultas.removeIf(c -> c.getIdConsulta().equalsIgnoreCase(idConsulta));
+        consultaDAO.guardarConsultas(listaConsultas);
     }
 
     public ConsultaDTO buscarPorID(String idConsulta) {
-        for (ConsultaDTO c : listaConsultas) {
-            if (c.getIdConsulta().equalsIgnoreCase(idConsulta)) {
-                return c;
-            }
-        }
-        return null;
+        return listaConsultas.stream()
+                .filter(c -> c.getIdConsulta().equalsIgnoreCase(idConsulta))
+                .findFirst()
+                .orElse(null);
     }
 
-    private void guardarConsultas() {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(archivo))) {
-            out.writeObject(listaConsultas);
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void validar(Veterinario veterinario, String nombreMascota, String descripcion) {
+        if (veterinario == null || !veterinario.isDisponible()) {
+            throw new IllegalArgumentException("Veterinario no disponible.");
         }
-    }
-
-    private List<ConsultaDTO> cargarConsultas() {
-        File file = new File(archivo);
-        if (!file.exists()) return new ArrayList<>();
-
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(archivo))) {
-            return (List<ConsultaDTO>) in.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
+        if (nombreMascota == null || nombreMascota.isBlank()) {
+            throw new IllegalArgumentException("Nombre de mascota requerido.");
+        }
+        if (descripcion == null || descripcion.isBlank()) {
+            throw new IllegalArgumentException("Descripción requerida.");
         }
     }
 }
