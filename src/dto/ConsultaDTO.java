@@ -14,7 +14,8 @@ public class ConsultaDTO extends EventoClinicoDTO implements Serializable {
     private String medicamentos;
 
     public ConsultaDTO(String idConsulta, LocalDate fecha, String nombreMascota, String descripcion,
-                       String idVeterinario, String nombreVeterinario, String especialidadVeterinario) {
+                       String idVeterinario, String nombreVeterinario, String especialidadVeterinario,
+                       String medicamentos, String diagnostico, String tratamiento) {
         super(fecha, nombreMascota, descripcion);
         if (idConsulta == null || idConsulta.isEmpty()) throw new IllegalArgumentException("ID de consulta no válido");
         if (idVeterinario == null || idVeterinario.isEmpty())
@@ -58,7 +59,7 @@ public class ConsultaDTO extends EventoClinicoDTO implements Serializable {
         this.diagnostico = diagnostico;
     }
 
-    public void setTratamiento(String tratamiento) {
+        public void setTratamiento(String tratamiento) {
         this.tratamiento = tratamiento;
     }
 

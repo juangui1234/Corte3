@@ -76,7 +76,7 @@ public class Consulta extends EventoClinico implements Serializable {
                 "\nDescripción: " + descripcion;
     }
 
-    // ✅ Conversión a DTO
+    /* ✅ Conversión a DTO
     public ConsultaDTO toDTO() {
         return new ConsultaDTO(
                 this.getCodigo(),
@@ -87,5 +87,5 @@ public class Consulta extends EventoClinico implements Serializable {
                 this.getVeterinario().getNombre(),
                 this.getVeterinario().getEspecialidad()
         );
-    }
+    }*/
 }

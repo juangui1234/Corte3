@@ -166,7 +166,13 @@ public class PanelConsulta extends JInternalFrame {
             LocalDate fecha = LocalDate.now();
 
             boolean registrado = consultaControlador.registrarConsulta(
-                    fecha, mascota.getNombre(), descripcion, medicamentosTexto, veterinario
+                    fecha,
+                    mascota.getNombre(),
+                    descripcion,
+                    txtMedicamentos.getText().trim(),
+                    txtDiagnostico.getText().trim(),
+                    txtTratamiento.getText().trim(),
+                    veterinario
             );
 
             if (registrado) {

@@ -24,8 +24,9 @@ public class ConsultaControlador {
         );
     }
 
-    public boolean registrarConsulta(LocalDate fecha, String nombreMascota,  String medicamentos, String descripcion,
-                                     Veterinario veterinarioSeleccionado) {
+    public boolean registrarConsulta(LocalDate fecha, String nombreMascota, String descripcion,
+                                     String medicamentos, String diagnostico, String tratamiento,
+                                     Veterinario veterinarioSeleccionado){
         validar(veterinarioSeleccionado, nombreMascota, descripcion);
 
         String idConsulta = IDGenerator.generarCodigoConsulta();
@@ -33,8 +34,8 @@ public class ConsultaControlador {
                 idConsulta, fecha, nombreMascota, descripcion,
                 veterinarioSeleccionado.getDocumento(),
                 veterinarioSeleccionado.getNombre(),
-                veterinarioSeleccionado.getEspecialidad()
-
+                veterinarioSeleccionado.getEspecialidad(),
+                medicamentos, diagnostico, tratamiento
         );
         nueva.setMedicamentos(medicamentos);
         listaConsultas.add(nueva);
