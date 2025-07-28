@@ -1,8 +1,10 @@
 package dto;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class VacunaDTO extends EventoClinicoDTO {
+public class VacunaDTO extends EventoClinicoDTO implements Serializable {
+
     private String tipoVacuna;
     private String lote;
     private LocalDate proximaDosis;

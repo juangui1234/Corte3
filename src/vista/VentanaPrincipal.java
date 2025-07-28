@@ -49,10 +49,10 @@ public class VentanaPrincipal extends JFrame {
         JMenu menuVista = new JMenu("Vista");
 
 
-        /* Vacunas
+        //Vacunas
         JMenuItem itemVacunas = new JMenuItem("Vacunas");
         itemVacunas.addActionListener(_ -> {
-            PanelVacunas panel = new PanelVacunas(crudMascotas);
+            PanelVacunas panel = new PanelVacunas();
             desktopPane.add(panel);
             panel.setVisible(true);
         });
@@ -75,7 +75,7 @@ public class VentanaPrincipal extends JFrame {
 
         // Agregamos al menú Vista
        // menuVista.add(itemGestion);
-        //menuVista.add(itemVacunas);
+        menuVista.add(itemVacunas);
        // menuVista.add(itemPacientes);
          menuVista.add(itemVeterinarios);
 

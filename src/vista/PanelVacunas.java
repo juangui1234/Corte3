@@ -1,128 +1,138 @@
 package vista;
 
-import dao.CrudMascotas;
-import modelo.*;
+import controlador.VacunaControlador;
+import dto.VacunaDTO;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class PanelVacunas extends JInternalFrame {
 
-    private CrudMascotas crudMascotas;
-
-    private JComboBox<String> comboMascotas;
-    private JTextField txtTipo, txtLote, txtFechaAplicacion, txtProximaDosis;
+    private JTextField txtNombreMascota, txtTipoVacuna, txtLote, txtDescripcion, txtFecha, txtProximaDosis;
     private JTable tablaVacunas;
     private DefaultTableModel modeloTabla;
+    private final VacunaControlador vacunaControlador;
 
-    public PanelVacunas(CrudMascotas crudMascotas) {
-        this.crudMascotas = crudMascotas;
-
+    public PanelVacunas() {
         setTitle("Gestión de Vacunas");
+        setSize(800, 400);
         setClosable(true);
-        setSize(600, 400);
         setLayout(new BorderLayout());
 
-        // Formulario
-        JPanel panelFormulario = new JPanel(new GridLayout(6, 2, 5, 5));
+        vacunaControlador = new VacunaControlador();
+        initComponentes();
+        cargarVacunasEnTabla();
+    }
 
-        comboMascotas = new JComboBox<>();
-        cargarMascotas();
+    private void initComponentes() {
+        JPanel panelFormulario = new JPanel(new GridLayout(7, 2, 5, 5));
 
-        txtTipo = new JTextField();
-        txtLote = new JTextField();
-        txtFechaAplicacion = new JTextField("2025-07-16");
-        txtProximaDosis = new JTextField("2026-07-16");
+        panelFormulario.add(new JLabel("Nombre Mascota:"));
+        txtNombreMascota = new JTextField();
+        panelFormulario.add(txtNombreMascota);
 
-        panelFormulario.add(new JLabel("Mascota:"));
-        panelFormulario.add(comboMascotas);
-        panelFormulario.add(new JLabel("Tipo vacuna:"));
-        panelFormulario.add(txtTipo);
+        panelFormulario.add(new JLabel("Tipo de Vacuna:"));
+        txtTipoVacuna = new JTextField();
+        panelFormulario.add(txtTipoVacuna);
+
         panelFormulario.add(new JLabel("Lote:"));
+        txtLote = new JTextField();
         panelFormulario.add(txtLote);
-        panelFormulario.add(new JLabel("Fecha aplicación (AAAA-MM-DD):"));
-        panelFormulario.add(txtFechaAplicacion);
-        panelFormulario.add(new JLabel("Próxima dosis (AAAA-MM-DD):"));
+
+        panelFormulario.add(new JLabel("Descripción:"));
+        txtDescripcion = new JTextField();
+        panelFormulario.add(txtDescripcion);
+
+        panelFormulario.add(new JLabel("Fecha (yyyy-MM-dd):"));
+        txtFecha = new JTextField();
+        panelFormulario.add(txtFecha);
+
+        panelFormulario.add(new JLabel("Próxima Dosis (yyyy-MM-dd):"));
+        txtProximaDosis = new JTextField();
         panelFormulario.add(txtProximaDosis);
 
-        JButton btnRegistrar = new JButton("Registrar vacuna");
-        JButton btnListar = new JButton("Listar vacunas");
+        JButton btnRegistrar = new JButton("Registrar Vacuna");
+        btnRegistrar.addActionListener(e -> registrarVacuna());
         panelFormulario.add(btnRegistrar);
-        panelFormulario.add(btnListar);
+
+        JButton btnEliminar = new JButton("Eliminar por Tipo");
+        btnEliminar.addActionListener(e -> eliminarVacuna());
+        panelFormulario.add(btnEliminar);
 
         add(panelFormulario, BorderLayout.NORTH);
 
-        // Tabla
-        modeloTabla = new DefaultTableModel();
-        modeloTabla.setColumnIdentifiers(new String[]{"Tipo", "Lote", "Aplicación", "Próxima dosis"});
+        modeloTabla = new DefaultTableModel(new String[]{
+                "Mascota", "Tipo", "Lote", "Descripción", "Fecha", "Próxima"
+        }, 0);
         tablaVacunas = new JTable(modeloTabla);
-        add(new JScrollPane(tablaVacunas), BorderLayout.CENTER);
-
-        // Botones
-        btnRegistrar.addActionListener(e -> registrarVacuna());
-        btnListar.addActionListener(e -> listarVacunas());
-    }
-
-    private void cargarMascotas() {
-        comboMascotas.removeAllItems();
-        for (Mascota m : crudMascotas.getMascotas()) {
-            comboMascotas.addItem(m.getNombre());
-        }
+        JScrollPane scroll = new JScrollPane(tablaVacunas);
+        add(scroll, BorderLayout.CENTER);
     }
 
     private void registrarVacuna() {
-        String nombreMascota = (String) comboMascotas.getSelectedItem();
-        Mascota mascota = crudMascotas.buscarPorNombre(nombreMascota);
-
         try {
-            String tipo = txtTipo.getText();
-            String lote = txtLote.getText();
-            LocalDate fechaAplicacion = LocalDate.parse(txtFechaAplicacion.getText());
-            LocalDate proximaDosis = LocalDate.parse(txtProximaDosis.getText());
+            String nombre = txtNombreMascota.getText().trim();
+            String tipo = txtTipoVacuna.getText().trim();
+            String lote = txtLote.getText().trim();
+            String descripcion = txtDescripcion.getText().trim();
+            LocalDate fecha = LocalDate.parse(txtFecha.getText().trim());
+            LocalDate proxima = LocalDate.parse(txtProximaDosis.getText().trim());
 
-            String descripcion = "Vacuna " + tipo + " - Lote " + lote;
+            // Registro correcto pasando los 6 argumentos
+            vacunaControlador.registrarVacuna(nombre, descripcion, fecha, tipo, lote, proxima);
 
-            Vacuna v = new Vacuna(
-                    fechaAplicacion,
-                    mascota,
-                    descripcion,
-                    tipo,
-                    lote,
-                    proximaDosis
-            );
+            JOptionPane.showMessageDialog(this, "Vacuna registrada correctamente");
+            limpiarCampos();
+            cargarVacunasEnTabla();
 
-            mascota.agregarEvento(v);
-
-            JOptionPane.showMessageDialog(this, "✅ Vacunación registrada correctamente.");
-            listarVacunas();
-
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "❌ Error al registrar: " + ex.getMessage());
+        } catch (DateTimeParseException ex) {
+            JOptionPane.showMessageDialog(this, "Formato de fecha inválido. Usa yyyy-MM-dd");
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
         }
     }
 
-    private void listarVacunas() {
-        modeloTabla.setRowCount(0); // limpiar tabla
-
-        String nombreMascota = (String) comboMascotas.getSelectedItem();
-        Mascota mascota = crudMascotas.buscarPorNombre(nombreMascota);
-
-        if (mascota != null) {
-            List<EventoClinico> eventos = mascota.getHistorial();
-            for (EventoClinico evento : eventos) {
-                if (evento instanceof Vacuna) {
-                    Vacuna v = (Vacuna) evento;
-                    modeloTabla.addRow(new Object[]{
-                            v.getTipoVacuna(),
-                            v.getLote(),
-                            v.getFecha(),
-                            v.getProximaDosis()
-                    });
-                }
-            }
+    private void eliminarVacuna() {
+        String nombre = txtNombreMascota.getText().trim();
+        String tipo = txtTipoVacuna.getText().trim();
+        if (nombre.isBlank() || tipo.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Nombre y tipo de vacuna requeridos.");
+            return;
         }
+        boolean eliminada = vacunaControlador.eliminarVacunaPorTipo(nombre, tipo);
+        if (eliminada) {
+            JOptionPane.showMessageDialog(this, "Vacuna eliminada.");
+            cargarVacunasEnTabla();
+        } else {
+            JOptionPane.showMessageDialog(this, "No se encontró la vacuna.");
+        }
+    }
+
+    private void cargarVacunasEnTabla() {
+        modeloTabla.setRowCount(0);
+        List<VacunaDTO> vacunas = vacunaControlador.listarVacunas();
+        for (VacunaDTO v : vacunas) {
+            modeloTabla.addRow(new Object[]{
+                    v.getNombreMascota(),
+                    v.getTipoVacuna(),
+                    v.getLote(),
+                    v.getDescripcion(),
+                    v.getFecha(),
+                    v.getProximaDosis()
+            });
+        }
+    }
+
+    private void limpiarCampos() {
+        txtNombreMascota.setText("");
+        txtTipoVacuna.setText("");
+        txtLote.setText("");
+        txtDescripcion.setText("");
+        txtFecha.setText("");
+        txtProximaDosis.setText("");
     }
 }

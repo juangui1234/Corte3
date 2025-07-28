@@ -30,4 +30,13 @@ public class MascotaDAO {
         List<MascotaDTO> lista = gestor.cargarLista(archivo);
         return (lista != null) ? lista : new ArrayList<>();
     }
+    public MascotaDTO buscarPorNombre(String nombre) {
+        List<MascotaDTO> lista = cargarMascotas();
+        for (MascotaDTO m : lista) {
+            if (m.getNombre().equalsIgnoreCase(nombre)) {
+                return m;
+            }
+        }
+        return null; // No se encontró la mascota
+    }
 }
