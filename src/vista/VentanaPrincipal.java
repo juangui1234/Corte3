@@ -32,7 +32,7 @@ public class VentanaPrincipal extends JFrame {
 
         desktopPane = new JDesktopPane();
         add(desktopPane, BorderLayout.CENTER);
-
+        mostrarImagenFondo();
         crearMenu();
 
         JOptionPane.showMessageDialog(
@@ -47,7 +47,7 @@ public class VentanaPrincipal extends JFrame {
         JMenuBar menuBar = new JMenuBar();
         JMenu menuArchivo = crearMenuArchivo();
         JMenu menuVista = new JMenu("Vista");
-
+        JMenu menuAyuda = new JMenu("Ayuda");
 
         //Vacunas
         JMenuItem itemVacunas = new JMenuItem("Vacunas");
@@ -73,17 +73,52 @@ public class VentanaPrincipal extends JFrame {
             panel.setVisible(true);
         });
 
-       // Agregamos al menú Vista
+        // Historial
+        JMenuItem itemHistorial = new JMenuItem("Historial Clínico");
+        itemHistorial.addActionListener(_ -> {
+        PanelHistorial panel = new PanelHistorial();
+        desktopPane.add(panel);
+        panel.setVisible(true);
+        });
+
+        //Ayuda - Acerca de
+        JMenuItem itemAcercaDe = new JMenuItem("Acerca de");
+        itemAcercaDe.addActionListener(_ -> {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "🐶 Sistema de Gestión Clínica Veterinaria\nVersión 1.0\nDesarrollado por Juan Guillermo Salazar\n© 2025 Todos los derechos reservados",
+                    "Acerca de",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+        });
+
+        // Mantenimiento
+        JMenuItem itemMantenimiento = new JMenuItem("Mantenimiento");
+        itemMantenimiento.addActionListener(_ -> {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "🛠️ Esta sección está en construcción.\n¡Muy pronto estará disponible!",
+                    "Mantenimiento",
+                    JOptionPane.WARNING_MESSAGE
+            );
+        });
+
+        // Agregamos al menú Vista
        // menuVista.add(itemGestion);
-        menuVista.add(itemVacunas);
+       menuVista.add(itemVacunas);
+       menuVista.add(itemHistorial);
        menuVista.add(itemPacientes);
        menuVista.add(itemVeterinarios);
 
         // Agregar menús a la barra
         menuBar.add(menuArchivo);
         menuBar.add(menuVista);
-
+        menuBar.add(menuAyuda);
         setJMenuBar(menuBar);
+
+        //menu ayuda
+       menuAyuda.add(itemMantenimiento);
+       menuAyuda.add(itemAcercaDe);
     }
 
     private JMenu crearMenuArchivo() {
@@ -144,4 +179,26 @@ public class VentanaPrincipal extends JFrame {
             ventana.setVisible(true);
         });
     }
+    private void mostrarImagenFondo() {
+        ImageIcon icono = new ImageIcon(getClass().getResource("/vista/imagenes/logo_clinica.png"));
+        JLabel lblImagen = new JLabel(icono);
+        lblImagen.setSize(icono.getIconWidth(), icono.getIconHeight());
+
+        desktopPane.setLayout(null); // Layout nulo para posicionar manualmente
+        desktopPane.add(lblImagen);
+
+        // Usamos ComponentListener para esperar a que el desktopPane esté visible y con dimensiones
+        desktopPane.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                int x = (desktopPane.getWidth() - lblImagen.getWidth()) / 2;
+                int y = (desktopPane.getHeight() - lblImagen.getHeight()) / 2;
+                lblImagen.setLocation(x, y);
+            }
+        });
+    }
+
 }
+
+
+
