@@ -68,6 +68,7 @@ public class VentanaPrincipal extends JFrame {
         // Veterinarios
         JMenuItem itemVeterinarios = new JMenuItem("Gestión Veterinarios");
         itemVeterinarios.addActionListener(_ -> {
+            System.out.println("hola");
             PanelVeterinarios panel = new PanelVeterinarios();
             desktopPane.add(panel);
             panel.setVisible(true);
@@ -86,7 +87,7 @@ public class VentanaPrincipal extends JFrame {
         itemAcercaDe.addActionListener(_ -> {
             JOptionPane.showMessageDialog(
                     this,
-                    "🐶 Sistema de Gestión Clínica Veterinaria\nVersión 1.0\nDesarrollado por Juan Guillermo Salazar\n© 2025 Todos los derechos reservados",
+                    "🐶 Sistema de Gestión Clínica Veterinaria\n                  Versión 1.0\nDesarrollado por Juan Guillermo Salazar\nTodos los derechos reservados\n                   © 2025",
                     "Acerca de",
                     JOptionPane.INFORMATION_MESSAGE
             );
@@ -102,6 +103,11 @@ public class VentanaPrincipal extends JFrame {
                     JOptionPane.WARNING_MESSAGE
             );
         });
+        // Agregar menús a la barra
+        menuBar.add(menuArchivo);
+        menuBar.add(menuVista);
+        menuBar.add(menuAyuda);
+        setJMenuBar(menuBar);
 
         // Agregamos al menú Vista
        // menuVista.add(itemGestion);
@@ -109,12 +115,6 @@ public class VentanaPrincipal extends JFrame {
        menuVista.add(itemHistorial);
        menuVista.add(itemPacientes);
        menuVista.add(itemVeterinarios);
-
-        // Agregar menús a la barra
-        menuBar.add(menuArchivo);
-        menuBar.add(menuVista);
-        menuBar.add(menuAyuda);
-        setJMenuBar(menuBar);
 
         //menu ayuda
        menuAyuda.add(itemMantenimiento);

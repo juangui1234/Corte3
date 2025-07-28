@@ -1,5 +1,6 @@
-/*package vista;
+package vista;
 
+import dto.VeterinarioDTO;
 import modelo.*;
 
 import javax.swing.*;
@@ -46,7 +47,7 @@ public class PanelEventosClinicos extends JPanel {
     // Agrega una consulta de ejemplo (para probar)
     private void agregarConsultaEjemplo(ActionEvent e) {
         Mascota mascota = new Mascota("Firulais", "Perro", 3);
-        Veterinario vet = new Veterinario("Dra. Martínez", "123", "3210000", "Medicina interna", true);
+        VeterinarioDTO vet = new VeterinarioDTO("Dra. Martínez", "123", "3210000", "Medicina interna", true);
 
         Consulta consulta = new Consulta(
                 LocalDate.now(),
@@ -75,4 +76,3 @@ public class PanelEventosClinicos extends JPanel {
         areaEventos.setText(sb.toString());
     }
 }
-*/
