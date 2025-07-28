@@ -1,4 +1,4 @@
-package vista;
+/*package vista;
 
 import controlador.MascotaControlador;
 import controlador.PropietarioControlador;
@@ -81,7 +81,7 @@ public class ListaPacientes extends JInternalFrame {
                     m.getEdad(),
                     propietarioNombre
             });
-        }*/
+        }
 
         barraCarga.setValue(100);
         barraCarga.setString("Datos cargados");
@@ -96,5 +96,5 @@ public class ListaPacientes extends JInternalFrame {
             }
         }
         return "Desconocido";
-    }*/
-}
+    }
+}*/

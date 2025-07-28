@@ -1,15 +1,16 @@
-package modelo;
+package dto;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 
-public abstract class EventoClinico implements Serializable {
+public abstract class EventoClinicoDTO implements Serializable {
     protected LocalDate fecha;
-    protected Mascota mascota;
+    protected String nombreMascota;  // Puedes usar ID o nombre como referencia
     protected String descripcion;
 
-    public EventoClinico(LocalDate fecha, Mascota mascota, String descripcion) {
+    public EventoClinicoDTO(LocalDate fecha, String nombreMascota, String descripcion) {
         this.fecha = fecha;
-        this.mascota = mascota;
+        this.nombreMascota = nombreMascota;
         this.descripcion = descripcion;
     }
 
@@ -17,14 +18,13 @@ public abstract class EventoClinico implements Serializable {
         return fecha;
     }
 
-    public Mascota getMascota() {
-        return mascota;
+    public String getNombreMascota() {
+        return nombreMascota;
     }
 
     public String getDescripcion() {
         return descripcion;
     }
 
-    // Metodo abstracto
     public abstract String mostrarDetalle();
 }

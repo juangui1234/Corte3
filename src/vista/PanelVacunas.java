@@ -85,7 +85,7 @@ public class PanelVacunas extends JInternalFrame {
 
             String descripcion = "Vacuna " + tipo + " - Lote " + lote;
 
-            Vacunacion v = new Vacunacion(
+            Vacuna v = new Vacuna(
                     fechaAplicacion,
                     mascota,
                     descripcion,
@@ -113,8 +113,8 @@ public class PanelVacunas extends JInternalFrame {
         if (mascota != null) {
             List<EventoClinico> eventos = mascota.getHistorial();
             for (EventoClinico evento : eventos) {
-                if (evento instanceof Vacunacion) {
-                    Vacunacion v = (Vacunacion) evento;
+                if (evento instanceof Vacuna) {
+                    Vacuna v = (Vacuna) evento;
                     modeloTabla.addRow(new Object[]{
                             v.getTipoVacuna(),
                             v.getLote(),

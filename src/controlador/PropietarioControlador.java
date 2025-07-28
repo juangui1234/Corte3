@@ -56,6 +56,9 @@ public class PropietarioControlador {
         }
     }
 
+    public List<PropietarioDTO> obtenerPropietarios() {
+        return convertirModeloaDTO(propietarios);
+    }
     public void guardarPropietarios() {
         List<PropietarioDTO> listaDTO = convertirModeloaDTO(propietarios);
         propietarioDAO.guardarPropietarios(listaDTO);

@@ -2,31 +2,52 @@ package controlador;
 
 import dao.MascotaDAO;
 import dto.MascotaDTO;
-import modelo.Mascota;
-
+import util.IDGenerator;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MascotaControlador {
-    private MascotaDAO dao = new MascotaDAO();
+    private final MascotaDAO dao;
+    public List<MascotaDTO> listaMascotas;
 
+    public MascotaControlador() {
+        this.dao = new MascotaDAO();
+        this.listaMascotas = dao.cargarMascotas();  // Cargar al iniciar
+        IDGenerator.inicializarDesdeDatos(
+                listaMascotas.stream().map(MascotaDTO::getCodigo).toList(),
+                "M-"
+        );
+    }
     public void registrarMascota(MascotaDTO dto) {
         validar(dto);
-        Mascota m = new Mascota(dto.getNombre(), dto.getEspecie(), dto.getEdad());
-        dao.guardar(m);
+
+        if (dto.getCodigo() == null || dto.getCodigo().isBlank()) {
+            dto.setCodigo(IDGenerator.generarCodigoMascota());
+        }
+
+        listaMascotas.add(dto);
+        dao.guardarMascotas(listaMascotas);
     }
 
-    public List<Mascota> obtenerMascotas() {
-        return dao.listar();
+    public List<MascotaDTO> obtenerMascotas() {
+        return new ArrayList<>(listaMascotas); // Retornar copia para seguridad
     }
 
-    public void eliminar(String nombre) {
-        dao.eliminarPorNombre(nombre);
+    public void eliminarMascotaPorNombre(String nombre) {
+        listaMascotas.removeIf(m -> m.getNombre().equalsIgnoreCase(nombre));
+        dao.guardarMascotas(listaMascotas);
     }
 
-    public void actualizar(String nombreClave, MascotaDTO dto) {
-        validar(dto);
-        Mascota nueva = new Mascota(dto.getNombre(), dto.getEspecie(), dto.getEdad());
-        dao.actualizar(nombreClave, nueva);
+    public void actualizarMascota(String nombreClave, MascotaDTO nueva) {
+        validar(nueva);
+        for (int i = 0; i < listaMascotas.size(); i++) {
+            if (listaMascotas.get(i).getNombre().equalsIgnoreCase(nombreClave)) {
+                listaMascotas.set(i, nueva);
+                dao.guardarMascotas(listaMascotas);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Mascota no encontrada con el nombre: " + nombreClave);
     }
 
     private void validar(MascotaDTO dto) {
@@ -36,7 +57,7 @@ public class MascotaControlador {
         if (dto.getEspecie() == null || dto.getEspecie().isBlank()) {
             throw new IllegalArgumentException("La especie no puede estar vacía.");
         }
-        if (dto.getEdad() < 0) {
+        if (dto.getEdad() < 0 || dto.getEdad() > 100) {
             throw new IllegalArgumentException("Edad inválida.");
         }
     }

@@ -48,7 +48,7 @@ public class PanelEventosClinicos extends JPanel {
         Mascota mascota = new Mascota("Firulais", "Perro", 3);
         Veterinario vet = new Veterinario("Dra. Martínez", "123", "3210000", "Medicina interna", true);
 
-        ConsultaVeterinaria consulta = new ConsultaVeterinaria(
+        Consulta consulta = new Consulta(
                 LocalDate.now(),
                 mascota,
                 "Consulta general por decaimiento",

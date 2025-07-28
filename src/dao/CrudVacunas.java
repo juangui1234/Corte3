@@ -7,9 +7,9 @@ import java.util.List;
 public class CrudVacunas {
 
     // Registrar vacunación a una mascota existente
-    public boolean registrarVacuna(Mascota mascota, Vacunacion vacunacion) {
-        if (mascota != null && vacunacion != null) {
-            mascota.agregarEvento(vacunacion); // ✅ Método correcto
+    public boolean registrarVacuna(Mascota mascota, Vacuna vacuna) {
+        if (mascota != null && vacuna != null) {
+            mascota.agregarEvento(vacuna); // ✅ Método correcto
             System.out.println("✅ Vacunación registrada para " + mascota.getNombre());
             return true;
         }
@@ -21,8 +21,8 @@ public class CrudVacunas {
         if (mascota != null) {
             boolean hayVacunas = false;
             for (EventoClinico e : mascota.getHistorial()) {
-                if (e instanceof Vacunacion) {
-                    System.out.println(((Vacunacion) e).mostrarDetalle());
+                if (e instanceof Vacuna) {
+                    System.out.println(((Vacuna) e).mostrarDetalle());
                     hayVacunas = true;
                 }
             }
@@ -35,11 +35,11 @@ public class CrudVacunas {
     }
 
     // Buscar vacuna por tipo en una mascota
-    public Vacunacion buscarVacunaPorTipo(Mascota mascota, String tipo) {
+    public Vacuna buscarVacunaPorTipo(Mascota mascota, String tipo) {
         if (mascota != null && tipo != null) {
             for (EventoClinico e : mascota.getHistorial()) {
-                if (e instanceof Vacunacion) {
-                    Vacunacion v = (Vacunacion) e;
+                if (e instanceof Vacuna) {
+                    Vacuna v = (Vacuna) e;
                     if (v.getTipoVacuna().equalsIgnoreCase(tipo)) {
                         return v;
                     }
@@ -51,9 +51,9 @@ public class CrudVacunas {
 
     // Eliminar vacuna por tipo
     public boolean eliminarVacunaPorTipo(Mascota mascota, String tipo) {
-        Vacunacion vacunacion = buscarVacunaPorTipo(mascota, tipo);
-        if (vacunacion != null) {
-            mascota.getHistorial().remove(vacunacion);
+        Vacuna vacuna = buscarVacunaPorTipo(mascota, tipo);
+        if (vacuna != null) {
+            mascota.getHistorial().remove(vacuna);
             System.out.println("🗑️ Vacunación '" + tipo + "' eliminada de " + mascota.getNombre());
             return true;
         }
@@ -61,14 +61,14 @@ public class CrudVacunas {
     }
 
     // Editar vacuna por tipo
-    public boolean editarVacunaPorTipo(Mascota mascota, String tipoOriginal, Vacunacion nuevaVacunacion) {
+    public boolean editarVacunaPorTipo(Mascota mascota, String tipoOriginal, Vacuna nuevaVacuna) {
         List<EventoClinico> historial = mascota.getHistorial();
         for (int i = 0; i < historial.size(); i++) {
             EventoClinico e = historial.get(i);
-            if (e instanceof Vacunacion) {
-                Vacunacion v = (Vacunacion) e;
+            if (e instanceof Vacuna) {
+                Vacuna v = (Vacuna) e;
                 if (v.getTipoVacuna().equalsIgnoreCase(tipoOriginal)) {
-                    historial.set(i, nuevaVacunacion);
+                    historial.set(i, nuevaVacuna);
                     System.out.println("✏️ Vacunación actualizada.");
                     return true;
                 }

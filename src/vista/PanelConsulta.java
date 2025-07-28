@@ -1,6 +1,8 @@
 package vista;
+import controlador.ConsultaControlador;
+import dto.MascotaDTO;
 import modelo.*;
-import modelo.ConsultaVeterinaria;
+import modelo.Consulta;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,7 +10,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PanelRegistrarConsulta extends JPanel {
+public class PanelConsulta extends JInternalFrame {
 
     private JComboBox<Mascota> comboMascotas;
     private JComboBox<Veterinario> comboVeterinarios;
@@ -18,10 +20,9 @@ public class PanelRegistrarConsulta extends JPanel {
     private JTextField txtDescripcion;
     private JButton btnRegistrar;
 
-    public PanelRegistrarConsulta(List<Mascota> mascotas, List<Veterinario> veterinarios) {
+    public PanelConsulta(List<MascotaDTO> mascotaDTOs, List<Veterinario> listaVeterinarios, ConsultaControlador controlador) {
         setLayout(new GridLayout(8, 2, 10, 10));
 
-        // Componentes
         comboMascotas = new JComboBox<>();
         comboVeterinarios = new JComboBox<>();
         txtDiagnostico = new JTextField();
@@ -30,14 +31,18 @@ public class PanelRegistrarConsulta extends JPanel {
         txtDescripcion = new JTextField();
         btnRegistrar = new JButton("Registrar Consulta");
 
-        // Llenar combos
-        for (Mascota m : mascotas) comboMascotas.addItem(m);
-        for (Veterinario v : veterinarios) comboVeterinarios.addItem(v);
+        for (MascotaDTO dto : mascotaDTOs) {
+            // si tienes una conversión a modelo, úsala, si no, muestra nombre
+            comboMascotas.addItem(new Mascota(dto.getNombre(), dto.getCodigo(), dto.getEdad()));
+        }
 
-        // Agregar componentes al panel
-        add(new JLabel("Modelo.MascotaDTO:"));
+        for (Veterinario v : listaVeterinarios) {
+            comboVeterinarios.addItem(v);
+        }
+
+        add(new JLabel("Mascota:"));
         add(comboMascotas);
-        add(new JLabel("Modelo.Veterinario:"));
+        add(new JLabel("Veterinario:"));
         add(comboVeterinarios);
         add(new JLabel("Diagnóstico:"));
         add(txtDiagnostico);
@@ -50,7 +55,6 @@ public class PanelRegistrarConsulta extends JPanel {
         add(new JLabel(""));
         add(btnRegistrar);
 
-        // Acción del botón
         btnRegistrar.addActionListener(e -> registrarConsulta());
     }
 
@@ -75,7 +79,7 @@ public class PanelRegistrarConsulta extends JPanel {
             }
 
             LocalDate fecha = LocalDate.now(); // Fecha actual
-            ConsultaVeterinaria consulta = new ConsultaVeterinaria(
+            Consulta consulta = new Consulta(
                     fecha, mascota, descripcion, diagnostico, tratamiento, medicamentos, veterinario
             );
 

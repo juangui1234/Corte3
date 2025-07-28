@@ -8,12 +8,13 @@ import java.awt.*;
 
 public class VentanaPrincipal extends JFrame {
     private JDesktopPane desktopPane;
-    private MascotaDAO mascotaDAO;
-    private CrudMascotas crudMascotas;
+   // private MascotaDAO mascotaDAO;
+    //private CrudMascotas crudMascotas;
 
     private MascotaControlador mascotaControlador;
     private PropietarioControlador propietarioControlador;
     private VeterinarioControlador veterinarioControlador;
+    private ConsultaControlador consultaControlador;
 
     public VentanaPrincipal() {
         setTitle("Sistema de Gestión Clínica Veterinaria");
@@ -23,11 +24,12 @@ public class VentanaPrincipal extends JFrame {
         setLayout(new BorderLayout());
 
         // Instanciación de controladores y DAO
-        mascotaDAO = new MascotaDAO();
-        crudMascotas = new CrudMascotas(); // Para paneles de vacunas y consultas
+       //mascotaDAO = new MascotaDAO();
+        //crudMascotas = new CrudMascotas(); // Para paneles de vacunas y consultas
         propietarioControlador = new PropietarioControlador();
         mascotaControlador = new MascotaControlador();
         veterinarioControlador = new VeterinarioControlador();
+        consultaControlador = new ConsultaControlador();
 
         desktopPane = new JDesktopPane();
         add(desktopPane, BorderLayout.CENTER);
@@ -47,15 +49,8 @@ public class VentanaPrincipal extends JFrame {
         JMenu menuArchivo = crearMenuArchivo();
         JMenu menuVista = new JMenu("Vista");
 
-        // Gestión Mascotas
-        JMenuItem itemGestion = new JMenuItem("Gestión Mascotas");
-        itemGestion.addActionListener(_ -> {
-            PanelGestionMascotas panel = new PanelGestionMascotas();
-            desktopPane.add(panel);
-            panel.setVisible(true);
-        });
 
-        // Vacunas
+        /* Vacunas
         JMenuItem itemVacunas = new JMenuItem("Vacunas");
         itemVacunas.addActionListener(_ -> {
             PanelVacunas panel = new PanelVacunas(crudMascotas);
@@ -63,24 +58,13 @@ public class VentanaPrincipal extends JFrame {
             panel.setVisible(true);
         });
 
-        // Pacientes
+        /* Pacientes
         JMenuItem itemPacientes = new JMenuItem("Pacientes");
         itemPacientes.addActionListener(_ -> {
             ListaPacientes lista = new ListaPacientes(mascotaControlador, propietarioControlador);
             desktopPane.add(lista);
             lista.setVisible(true);
-        });
-
-        // Registro Consulta
-        JMenuItem itemConsulta = new JMenuItem("Registrar ConsultaVeterinaria");
-        itemConsulta.addActionListener(_ -> {
-            PanelRegistrarConsulta panel = new PanelRegistrarConsulta(
-                    crudMascotas.getMascotas(),
-                    veterinarioControlador.getListaVeterinarios()
-            );
-            desktopPane.add(panel);
-            panel.setVisible(true);
-        });
+        });*/
 
         // Veterinarios
         JMenuItem itemVeterinarios = new JMenuItem("Gestión Veterinarios");
@@ -91,11 +75,10 @@ public class VentanaPrincipal extends JFrame {
         });
 
         // Agregamos al menú Vista
-        menuVista.add(itemGestion);
-        menuVista.add(itemVacunas);
-        menuVista.add(itemPacientes);
-        menuVista.add(itemConsulta);
-        menuVista.add(itemVeterinarios);
+       // menuVista.add(itemGestion);
+        //menuVista.add(itemVacunas);
+       // menuVista.add(itemPacientes);
+         menuVista.add(itemVeterinarios);
 
         // Agregar menús a la barra
         menuBar.add(menuArchivo);
@@ -119,13 +102,18 @@ public class VentanaPrincipal extends JFrame {
             desktopPane.add(panel);
             panel.setVisible(true);
         });
-        menuArchivo.add(itemVeterinariosArchivo);
-        JMenuItem itemRegistrarConsulta = new JMenuItem("Registrar Consulta Veterinaria");
-        itemRegistrarConsulta.addActionListener(_ -> {
-            PanelRegistrarConsulta panel = new PanelRegistrarConsulta(
-                    crudMascotas.getMascotas(),
-                    veterinarioControlador.getListaVeterinarios()
-            );
+        // Gestión Mascotas
+       JMenuItem itemMascotas = new JMenuItem("Gestionar Mascotas");
+        itemMascotas.addActionListener(_ -> {
+            PanelMascotas panel = new PanelMascotas(mascotaControlador, propietarioControlador);
+            desktopPane.add(panel);
+            panel.setVisible(true);
+        });
+
+        JMenuItem itemConsulta = new JMenuItem("Registrar Consulta");
+        itemConsulta.addActionListener(_ -> {
+            PanelConsulta panel = new PanelConsulta(mascotaControlador.obtenerMascotas(),  veterinarioControlador.getListaVeterinarios(),
+                    consultaControlador);
             desktopPane.add(panel);
             panel.setVisible(true);
         });
@@ -143,9 +131,10 @@ public class VentanaPrincipal extends JFrame {
                 System.exit(0);
             }
         });
-
         menuArchivo.add(itemPropietarios);
-        menuArchivo.add(itemRegistrarConsulta);
+        menuArchivo.add(itemMascotas);
+        menuArchivo.add(itemVeterinariosArchivo);
+        menuArchivo.add(itemConsulta);
         menuArchivo.addSeparator();
         menuArchivo.add(itemSalir);
         return menuArchivo;

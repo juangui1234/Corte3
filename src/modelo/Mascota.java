@@ -22,7 +22,7 @@ public class Mascota implements Serializable {
 
 
     //private ArrayList<Consulta> consultas;
-    //private List<Vacunacion> vacunas = new ArrayList<>();
+    //private List<Vacuna> vacunas = new ArrayList<>();
     //private String nombreMascota;
 
         //private Historial historial; //delegar manejo de consultas a historial
@@ -54,12 +54,14 @@ public class Mascota implements Serializable {
             System.out.println("No hay vacunas registradas.");
         } else {
             System.out.println("Vacunas aplicadas a " + nombre + ":");
-            for (Vacunacion v : vacunas) {
+            for (Vacuna v : vacunas) {
                 v.mostrarDetalle();
                 System.out.println("--------------------------");
             }
         }
     }*/
+
+
     public void mostrarHistorial() {
         System.out.println("📋 Mascota: " + nombre + " | Especie: " + especie + " | Edad: " + edad + " años");
         if (historial.isEmpty()) {
@@ -134,11 +136,11 @@ public class Mascota implements Serializable {
         return especie;
     }
 
-    public List<Vacunacion> getVacunaciones() {
-        List<Vacunacion> vacunaciones = new ArrayList<>();
+    public List<Vacuna> getVacunaciones() {
+        List<Vacuna> vacunaciones = new ArrayList<>();
         for (EventoClinico evento : historial) {
-            if (evento instanceof Vacunacion) {
-                vacunaciones.add((Vacunacion) evento);
+            if (evento instanceof Vacuna) {
+                vacunaciones.add((Vacuna) evento);
             }
         }
         return vacunaciones;
@@ -150,11 +152,11 @@ public class Mascota implements Serializable {
         this.especie = especie;
     }
 
-    public List<ConsultaVeterinaria> getConsultas() {
-        List<ConsultaVeterinaria> consultas = new ArrayList<>();
+    public List<Consulta> getConsultas() {
+        List<Consulta> consultas = new ArrayList<>();
         for (EventoClinico evento : historial) {
-            if (evento instanceof ConsultaVeterinaria) {
-                consultas.add((ConsultaVeterinaria) evento);
+            if (evento instanceof Consulta) {
+                consultas.add((Consulta) evento);
             }
         }
         return consultas;
@@ -170,7 +172,7 @@ public class Mascota implements Serializable {
         this.edad = edad;
     }
 
-   /* public List<Vacunacion> getVacunas() {
+   /* public List<Vacuna> getVacunas() {
         return vacunas;
     }*/
     @Override

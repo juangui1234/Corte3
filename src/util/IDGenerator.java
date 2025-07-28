@@ -30,11 +30,11 @@ public class IDGenerator {
     }
 
     public static String generarCodigoConsulta() {
-        return "C-" + (++contadorConsulta);
+        return "C-" + String.format("%03d", contadorConsulta++);
     }
 
     public static String generarCodigoMascota() {
-        return "M-" + (++contadorMascota);
+        return "M-" + String.format("%03d", contadorMascota++);
     }
 
     public static String generarCodigoVeterinario() {

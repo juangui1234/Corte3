@@ -1,15 +1,16 @@
 package modelo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-public class CitaMedica extends EventoClinico {
+public class Cita extends EventoClinico implements Serializable  {
     private LocalTime hora;
     private Veterinario veterinario;
     private String estado; // Valores posibles: agendada, completada, cancelada
 
-    public CitaMedica(LocalDate fecha, Mascota mascota, String descripcion,
-                      LocalTime hora, Veterinario veterinario, String estado) {
+    public Cita(LocalDate fecha, Mascota mascota, String descripcion,
+                LocalTime hora, Veterinario veterinario, String estado) {
         super(fecha, mascota, descripcion);
         this.hora = hora;
         this.veterinario = veterinario;

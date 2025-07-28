@@ -1,25 +1,43 @@
 package dto;
 
 import modelo.EventoClinico;
-
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
-public class MascotaDTO {
+public class MascotaDTO implements Serializable {
+    private String codigo;
     private String nombre;
     private String especie;
+    private String propietarioId;
     private int edad;
     private ArrayList<EventoClinico> historial;
 
-    public MascotaDTO(String nombre, String especie, int edad) {
+        public MascotaDTO(String nombre, String especie, int edad, String codigo, String idPropietario) {
         this.nombre = nombre;
+        this.codigo = codigo;
         this.especie = especie;
         this.edad = edad;
         this.historial = new ArrayList<>();
+        this.propietarioId = idPropietario;
     }
 
     // Getters
-    public String getNombre() {
-        return nombre;
+
+    public String getCodigo() { return codigo; }
+
+    public void setCodigo(String codigo) { this.codigo = codigo; }
+
+    public String getPropietarioId() {
+        return propietarioId;
+    }
+
+    public void setPropietarioId(String propietarioId) {
+        this.propietarioId = propietarioId;
+    }
+
+   public String getNombre() {
+   return nombre;
     }
 
     public String getEspecie() {
@@ -47,7 +65,7 @@ public class MascotaDTO {
         this.edad = edad;
     }
 
-    // Método para agregar eventos al historial
+    //Metodo para agregar eventos al historial
     public void agregarEvento(EventoClinico evento) {
         historial.add(evento);
     }

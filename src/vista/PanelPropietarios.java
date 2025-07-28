@@ -10,8 +10,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class PanelPropietarios extends JInternalFrame {
-    private PropietarioControlador controlador;
+    private PropietarioControlador propietarioControlador;
+    public PanelPropietarios(PropietarioControlador propietarioControlador) {
+    this.propietarioControlador = propietarioControlador;
 
+    }
     private JTextField txtNombre, txtDocumento, txtTelefono, txtDireccion;
     private JTextArea areaListado;
     private JList<String> listaPropietarios;
@@ -20,7 +23,7 @@ public class PanelPropietarios extends JInternalFrame {
 
     public PanelPropietarios() {
         super("Gestión de Propietarios", true, true, true, true);
-        this.controlador = new PropietarioControlador();
+        this.propietarioControlador = new PropietarioControlador();
         setSize(600, 450);
         setClosable(true);
         setIconifiable(true);
@@ -88,12 +91,12 @@ public class PanelPropietarios extends JInternalFrame {
         String telefono = txtTelefono.getText().trim();
         String direccion = txtDireccion.getText().trim();
 
-        if (controlador.buscarPorIdentificacion(documento) != null) {
+        if (propietarioControlador.buscarPorIdentificacion(documento) != null) {
             JOptionPane.showMessageDialog(this, "⚠️ Ya existe un propietario con ese documento.");
             return;
         }
 
-        boolean exito = controlador.agregarPropietario(nombre, documento, telefono, direccion);
+        boolean exito = propietarioControlador.agregarPropietario(nombre, documento, telefono, direccion);
         if (exito) {
             JOptionPane.showMessageDialog(this, "✅ Propietario agregado correctamente");
             limpiarCampos();
@@ -114,7 +117,7 @@ public class PanelPropietarios extends JInternalFrame {
         String telefono = txtTelefono.getText().trim();
         String direccion = txtDireccion.getText().trim();
 
-        Propietario p = controlador.buscarPorIdentificacion(documentoSeleccionado);
+        Propietario p = propietarioControlador.buscarPorIdentificacion(documentoSeleccionado);
         if (p != null) {
             try {
                 p.setNombre(nombre);
@@ -122,7 +125,7 @@ public class PanelPropietarios extends JInternalFrame {
                 p.setTelefono(telefono);
                 p.setDireccion(direccion);
 
-                controlador.guardarPropietarios();
+                propietarioControlador.guardarPropietarios();
                 mostrarPropietarios();
                 limpiarCampos();
                 JOptionPane.showMessageDialog(this, "✅ Propietario actualizado.");
@@ -145,7 +148,7 @@ public class PanelPropietarios extends JInternalFrame {
         int confirm = JOptionPane.showConfirmDialog(this,
                 "¿Estás seguro de eliminar este propietario?", "Confirmar", JOptionPane.YES_NO_OPTION);
         if (confirm == JOptionPane.YES_OPTION) {
-            controlador.eliminarPropietario(documentoSeleccionado);
+            propietarioControlador.eliminarPropietario(documentoSeleccionado);
             mostrarPropietarios();
             limpiarCampos();
             JOptionPane.showMessageDialog(this, "🗑️ Propietario eliminado.");
@@ -169,7 +172,7 @@ public class PanelPropietarios extends JInternalFrame {
 
     private void mostrarPropietarios() {
         modeloLista.clear();
-        for (Propietario p : controlador.getPropietarios()) {
+        for (Propietario p : propietarioControlador.getPropietarios()) {
             modeloLista.addElement("[" + p.getCodigo() + "] " + p.getNombre() + " - "
                     + p.getDocumento() + " - " + p.getTelefono() + " - " + p.getDireccion());
         }

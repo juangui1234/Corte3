@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class Historial implements List<EventoClinico> {
-    private List<ConsultaVeterinaria> consultaVeterinarias;
+public class Historial implements List implements Serializable <EventoClinico> {
+    private List<Consulta> consultaVeterinarias;
 
     public Historial() {
         this.consultaVeterinarias = new ArrayList<>();
     }
 
-    public void agregarConsulta(ConsultaVeterinaria consultaVeterinaria) {
+    public void agregarConsulta(Consulta consultaVeterinaria) {
         if (consultaVeterinaria != null) {
             consultaVeterinarias.add(consultaVeterinaria);
         }
@@ -21,14 +21,14 @@ public class Historial implements List<EventoClinico> {
         if (consultaVeterinarias.isEmpty()) {
             System.out.println("Sin consultaVeterinarias registradas.");
         } else {
-            for (ConsultaVeterinaria c : consultaVeterinarias) {
+            for (Consulta c : consultaVeterinarias) {
                 c.mostrarConsulta();
                 System.out.println("--------------------------");
             }
         }
     }
 
-    public List<ConsultaVeterinaria> getConsultas() {
+    public List<Consulta> getConsultas() {
         return new ArrayList<>(consultaVeterinarias);
     }
 }

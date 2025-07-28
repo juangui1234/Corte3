@@ -1,17 +1,18 @@
 package modelo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
-public class ConsultaVeterinaria extends EventoClinico {
+public class Consulta extends EventoClinico implements Serializable {
     private String diagnostico;
     private String tratamiento;
     private List<String> medicamentos;
     private Veterinario veterinario;
 
-    public ConsultaVeterinaria(LocalDate fecha, Mascota mascota, String descripcion,
-                               String diagnostico, String tratamiento,
-                               List<String> medicamentos, Veterinario veterinario) {
+    public Consulta(LocalDate fecha, Mascota mascota, String descripcion,
+                    String diagnostico, String tratamiento,
+                    List<String> medicamentos, Veterinario veterinario) {
         super(fecha, mascota, descripcion);
         this.diagnostico = diagnostico;
         this.tratamiento = tratamiento;

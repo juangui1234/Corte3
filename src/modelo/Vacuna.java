@@ -1,14 +1,15 @@
 package modelo;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Vacunacion extends EventoClinico {
+public class Vacuna extends EventoClinico implements Serializable {
     private String tipoVacuna;
     private String lote;
     private LocalDate proximaDosis;
 
-    public Vacunacion(LocalDate fecha, Mascota mascota, String descripcion,
-                      String tipoVacuna, String lote, LocalDate proximaDosis) {
+    public Vacuna(LocalDate fecha, Mascota mascota, String descripcion,
+                  String tipoVacuna, String lote, LocalDate proximaDosis) {
         super(fecha, mascota, descripcion);
         this.tipoVacuna = tipoVacuna;
         this.lote = lote;
