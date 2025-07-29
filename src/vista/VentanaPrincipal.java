@@ -19,7 +19,7 @@ public class VentanaPrincipal extends JFrame {
 
     public VentanaPrincipal() {
         setTitle("Sistema de Gestión Clínica Veterinaria");
-        setSize(900, 700);
+        setSize(1000, 900);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -92,7 +92,7 @@ public class VentanaPrincipal extends JFrame {
         //Eventos clínicos
         JMenuItem itemEventosClinicos = new JMenuItem("Eventos Clínicos");
         itemEventosClinicos.addActionListener(_ -> {
-            PanelEventoClinico panel = new PanelEventoClinico();
+            PanelEventoClinico panel = new PanelEventoClinico(desktopPane);
             desktopPane.add(panel);
             panel.setVisible(true);
         });
@@ -102,7 +102,7 @@ public class VentanaPrincipal extends JFrame {
         itemAcercaDe.addActionListener(_ -> {
             JOptionPane.showMessageDialog(
                     this,
-                    "🐶 Sistema de Gestión Clínica Veterinaria\n                  Versión 1.0\nDesarrollado por Juan Guillermo Salazar\nTodos los derechos reservados\n                   © 2025",
+                    "🐶 Sistema de Gestión Clínica Veterinaria\n                    Versión 1.2\nDesarrollado por Juan Guillermo Salazar\n    Todos los derechos reservados\n                        © 2025",
                     "Acerca de",
                     JOptionPane.INFORMATION_MESSAGE
             );
