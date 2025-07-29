@@ -227,4 +227,7 @@ public class PanelMascotas extends JInternalFrame {
         txtEdad.setText("");
         comboPropietarios.setSelectedIndex(-1);
     }
+    public void recargarComboPropietarios() {
+        cargarPropietarios();
+    }
 }

@@ -11,19 +11,26 @@ import java.awt.event.MouseEvent;
 
 public class PanelPropietarios extends JInternalFrame {
     private PropietarioControlador propietarioControlador;
-    public PanelPropietarios(PropietarioControlador propietarioControlador) {
-    this.propietarioControlador = propietarioControlador;
-
-    }
     private JTextField txtNombre, txtDocumento, txtTelefono, txtDireccion;
-    private JTextArea areaListado;
     private JList<String> listaPropietarios;
     private DefaultListModel<String> modeloLista;
     private String documentoSeleccionado = null;
+    private PanelMascotas panelMascotas; // para actualizar combo en mascotas
 
-    public PanelPropietarios() {
+    // 🔹 Constructor principal
+    public PanelPropietarios(PropietarioControlador propietarioControlador) {
         super("Gestión de Propietarios", true, true, true, true);
-        this.propietarioControlador = new PropietarioControlador();
+        this.propietarioControlador = propietarioControlador;
+        initUI();
+    }
+
+    // 🔹 Constructor por defecto (para pruebas sueltas)
+    public PanelPropietarios() {
+        this(new PropietarioControlador());
+    }
+
+    // Inicializa la interfaz
+    private void initUI() {
         setSize(600, 450);
         setClosable(true);
         setIconifiable(true);
@@ -85,6 +92,7 @@ public class PanelPropietarios extends JInternalFrame {
         mostrarPropietarios();
     }
 
+    // 🔹 Métodos de CRUD
     private void agregarPropietario(ActionEvent e) {
         String nombre = txtNombre.getText().trim();
         String documento = txtDocumento.getText().trim();
@@ -101,6 +109,11 @@ public class PanelPropietarios extends JInternalFrame {
             JOptionPane.showMessageDialog(this, "✅ Propietario agregado correctamente");
             limpiarCampos();
             mostrarPropietarios();
+
+            // 🔄 Actualiza combo de mascotas si el panel está enlazado
+            if (panelMascotas != null) {
+                panelMascotas.recargarComboPropietarios();
+            }
         } else {
             JOptionPane.showMessageDialog(this, "❌ Error al agregar propietario.", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -131,6 +144,10 @@ public class PanelPropietarios extends JInternalFrame {
                 JOptionPane.showMessageDialog(this, "✅ Propietario actualizado.");
                 documentoSeleccionado = null;
 
+                if (panelMascotas != null) {
+                    panelMascotas.recargarComboPropietarios();
+                }
+
             } catch (excepciones.DatoInvalidoException ex) {
                 JOptionPane.showMessageDialog(this,
                         "❌ No se pudo actualizar el propietario: " + ex.getMessage(),
@@ -153,9 +170,14 @@ public class PanelPropietarios extends JInternalFrame {
             limpiarCampos();
             JOptionPane.showMessageDialog(this, "🗑️ Propietario eliminado.");
             documentoSeleccionado = null;
+
+            if (panelMascotas != null) {
+                panelMascotas.recargarComboPropietarios();
+            }
         }
     }
 
+    // 🔹 Métodos auxiliares
     private void cargarDatosDesdeSeleccion() {
         String seleccion = listaPropietarios.getSelectedValue();
         if (seleccion != null && seleccion.contains("]")) {
@@ -187,7 +209,7 @@ public class PanelPropietarios extends JInternalFrame {
         documentoSeleccionado = null;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new PanelPropietarios().setVisible(true));
+    public void setPanelMascotas(PanelMascotas panelMascotas) {
+        this.panelMascotas = panelMascotas;
     }
 }

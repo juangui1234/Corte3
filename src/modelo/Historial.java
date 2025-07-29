@@ -33,3 +33,5 @@ public class Historial implements List implements Serializable <EventoClinico> {
     }
 }
 */
+
+//NO SE USA POR QUE YA ESTA LEYENDO EL PANEL DIRECTO DEL .DAT

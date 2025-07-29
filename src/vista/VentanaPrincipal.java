@@ -7,29 +7,37 @@ import java.awt.*;
 
 public class VentanaPrincipal extends JFrame {
     private JDesktopPane desktopPane;
-   // private MascotaDAO mascotaDAO;
-    //private CrudMascotas crudMascotas;
 
     private MascotaControlador mascotaControlador;
     private PropietarioControlador propietarioControlador;
     private VeterinarioControlador veterinarioControlador;
     private ConsultaControlador consultaControlador;
 
+    // 🔹 Paneles principales
+    private PanelPropietarios panelPropietarios;
+    private PanelMascotas panelMascotas;
+
     public VentanaPrincipal() {
         setTitle("Sistema de Gestión Clínica Veterinaria");
-        setSize(800, 600);
+        setSize(900, 700);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // Instanciación de controladores y DAO
-       //mascotaDAO = new MascotaDAO();
-        //crudMascotas = new CrudMascotas(); // Para paneles de vacunas y consultas
+        // Instanciar controladores
         propietarioControlador = new PropietarioControlador();
         mascotaControlador = new MascotaControlador();
         veterinarioControlador = new VeterinarioControlador();
         consultaControlador = new ConsultaControlador();
 
+        // 🔹 Crear paneles una sola vez con el controlador correcto
+        panelPropietarios = new PanelPropietarios(propietarioControlador);
+        panelMascotas = new PanelMascotas(mascotaControlador, propietarioControlador);
+
+        // 🔹 Enlace entre paneles
+        panelPropietarios.setPanelMascotas(panelMascotas);
+
+        // DesktopPane principal
         desktopPane = new JDesktopPane();
         add(desktopPane, BorderLayout.CENTER);
         mostrarImagenFondo();
@@ -68,7 +76,6 @@ public class VentanaPrincipal extends JFrame {
         // Veterinarios
         JMenuItem itemVeterinarios = new JMenuItem("Gestión Veterinarios");
         itemVeterinarios.addActionListener(_ -> {
-            System.out.println("hola");
             PanelVeterinarios panel = new PanelVeterinarios();
             desktopPane.add(panel);
             panel.setVisible(true);
@@ -77,9 +84,17 @@ public class VentanaPrincipal extends JFrame {
         // Historial
         JMenuItem itemHistorial = new JMenuItem("Historial Clínico");
         itemHistorial.addActionListener(_ -> {
-        PanelHistorial panel = new PanelHistorial();
-        desktopPane.add(panel);
-        panel.setVisible(true);
+            PanelHistorial panel = new PanelHistorial();
+            desktopPane.add(panel);
+            panel.setVisible(true);
+        });
+
+        //Eventos clínicos
+        JMenuItem itemEventosClinicos = new JMenuItem("Eventos Clínicos");
+        itemEventosClinicos.addActionListener(_ -> {
+            PanelEventoClinico panel = new PanelEventoClinico();
+            desktopPane.add(panel);
+            panel.setVisible(true);
         });
 
         //Ayuda - Acerca de
@@ -103,47 +118,64 @@ public class VentanaPrincipal extends JFrame {
                     JOptionPane.WARNING_MESSAGE
             );
         });
+
         // Agregar menús a la barra
         menuBar.add(menuArchivo);
         menuBar.add(menuVista);
         menuBar.add(menuAyuda);
         setJMenuBar(menuBar);
 
-        // Agregamos al menú Vista
-       // menuVista.add(itemGestion);
-       menuVista.add(itemVacunas);
-       menuVista.add(itemHistorial);
-       menuVista.add(itemPacientes);
-       menuVista.add(itemVeterinarios);
+        // Menú Vista
+        menuVista.add(itemEventosClinicos);
+        menuVista.add(itemVacunas);
+        menuVista.add(itemHistorial);
+        menuVista.add(itemPacientes);
+        menuVista.add(itemVeterinarios);
 
-        //menu ayuda
-       menuAyuda.add(itemMantenimiento);
-       menuAyuda.add(itemAcercaDe);
+        // Menú Ayuda
+        menuAyuda.add(itemMantenimiento);
+        menuAyuda.add(itemAcercaDe);
     }
 
     private JMenu crearMenuArchivo() {
         JMenu menuArchivo = new JMenu("Archivo");
 
+        // 🔹 Registrar Propietario
         JMenuItem itemPropietarios = new JMenuItem("Registrar Propietario");
         itemPropietarios.addActionListener(_ -> {
-            PanelPropietarios panel = new PanelPropietarios();
-            desktopPane.add(panel);
-            panel.setVisible(true);
+            if (!panelPropietarios.isVisible()) {
+                desktopPane.add(panelPropietarios);
+                panelPropietarios.setVisible(true);
+            } else {
+                panelPropietarios.toFront();
+            }
         });
+
+        // 🔹 Registrar Veterinarios
         JMenuItem itemVeterinariosArchivo = new JMenuItem("Registrar Veterinarios");
         itemVeterinariosArchivo.addActionListener(_ -> {
             PanelVeterinarios panel = new PanelVeterinarios();
             desktopPane.add(panel);
             panel.setVisible(true);
         });
-        // Gestión Mascotas
-       JMenuItem itemMascotas = new JMenuItem("Gestionar Mascotas");
+
+        // 🔹 Gestión Mascotas
+        JMenuItem itemMascotas = new JMenuItem("Gestionar Mascotas");
         itemMascotas.addActionListener(_ -> {
-            PanelMascotas panel = new PanelMascotas(mascotaControlador, propietarioControlador);
-            desktopPane.add(panel);
-            panel.setVisible(true);
+            if (!panelMascotas.isVisible()) {
+                desktopPane.add(panelMascotas);
+                panelMascotas.setVisible(true);
+
+                // Reenlazar por si el usuario abrió primero Propietarios
+                if (panelPropietarios != null) {
+                    panelPropietarios.setPanelMascotas(panelMascotas);
+                }
+            } else {
+                panelMascotas.toFront();
+            }
         });
 
+        // 🔹 Registrar Consulta
         JMenuItem itemConsulta = new JMenuItem("Registrar Consulta");
         itemConsulta.addActionListener(_ -> {
             PanelConsulta panel = new PanelConsulta();
@@ -151,6 +183,7 @@ public class VentanaPrincipal extends JFrame {
             panel.setVisible(true);
         });
 
+        // 🔹 Salir
         JMenuItem itemSalir = new JMenuItem("Salir");
         itemSalir.addActionListener(_ -> {
             int opcion = JOptionPane.showConfirmDialog(
@@ -164,6 +197,7 @@ public class VentanaPrincipal extends JFrame {
                 System.exit(0);
             }
         });
+
         menuArchivo.add(itemPropietarios);
         menuArchivo.add(itemMascotas);
         menuArchivo.add(itemVeterinariosArchivo);
@@ -179,6 +213,7 @@ public class VentanaPrincipal extends JFrame {
             ventana.setVisible(true);
         });
     }
+
     private void mostrarImagenFondo() {
         ImageIcon icono = new ImageIcon(getClass().getResource("/vista/imagenes/logo_clinica.png"));
         JLabel lblImagen = new JLabel(icono);
@@ -187,7 +222,7 @@ public class VentanaPrincipal extends JFrame {
         desktopPane.setLayout(null); // Layout nulo para posicionar manualmente
         desktopPane.add(lblImagen);
 
-        // Usamos ComponentListener para esperar a que el desktopPane esté visible y con dimensiones
+        // Centrar imagen cuando se redimensiona la ventana
         desktopPane.addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -197,8 +232,4 @@ public class VentanaPrincipal extends JFrame {
             }
         });
     }
-
 }
-
-
-
