@@ -1,17 +1,15 @@
 package vista;
+
 import dto.MascotaDTO;
-import controlador.VacunaControlador;
 import dto.VacunaDTO;
-import modelo.Mascota;
+import controlador.VacunaControlador;
 import controlador.MascotaControlador;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.io.FileInputStream;
-import java.io.ObjectInputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PanelVacunas extends JInternalFrame {
@@ -21,16 +19,19 @@ public class PanelVacunas extends JInternalFrame {
     private JTable tablaVacunas;
     private DefaultTableModel modeloTabla;
     private final VacunaControlador vacunaControlador;
-    private MascotaControlador mascotaControlador;
+    private final MascotaControlador mascotaControlador;
 
     public PanelVacunas(MascotaControlador mascotaControlador) {
         this.mascotaControlador = mascotaControlador;
+
         setTitle("Gestión de Vacunas");
         setSize(800, 400);
         setClosable(true);
         setLayout(new BorderLayout());
 
+        // 🔹 Controlador ahora maneja persistencia
         vacunaControlador = new VacunaControlador();
+
         initComponentes();
         cargarMascotasEnCombo();
         cargarVacunasEnTabla();
@@ -80,18 +81,29 @@ public class PanelVacunas extends JInternalFrame {
         JScrollPane scroll = new JScrollPane(tablaVacunas);
         add(scroll, BorderLayout.CENTER);
     }
+
+    /**
+     * Carga los nombres de mascotas al combo
+     */
     private void cargarMascotasEnCombo() {
-        comboMascotas.removeAllItems(); // Limpia antes de llenar
+        comboMascotas.removeAllItems();
         List<MascotaDTO> mascotas = mascotaControlador.obtenerMascotas();
 
         for (MascotaDTO mascota : mascotas) {
-            comboMascotas.addItem(mascota.getNombre()); // Solo el nombre
-            // Si quieres mostrar más info:
-            // comboMascotas.addItem(mascota.getNombre() + " - " + mascota.getEspecie());
+            comboMascotas.addItem(mascota.getNombre());
         }
     }
+
+    /**
+     * Registra una vacuna y guarda en archivo
+     */
     private void registrarVacuna() {
         try {
+            if (comboMascotas.getSelectedItem() == null) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar una mascota.");
+                return;
+            }
+
             String nombre = comboMascotas.getSelectedItem().toString();
             String tipo = txtTipoVacuna.getText().trim();
             String lote = txtLote.getText().trim();
@@ -112,13 +124,23 @@ public class PanelVacunas extends JInternalFrame {
         }
     }
 
+    /**
+     * Elimina una vacuna por tipo para la mascota seleccionada
+     */
     private void eliminarVacuna() {
-        String nombre = comboMascotas.getSelectedItem().toString();
-        String tipo = txtTipoVacuna.getText().trim();
-        if (nombre.isBlank() || tipo.isBlank()) {
-            JOptionPane.showMessageDialog(this, "Nombre y tipo de vacuna requeridos.");
+        if (comboMascotas.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar una mascota.");
             return;
         }
+
+        String nombre = comboMascotas.getSelectedItem().toString();
+        String tipo = txtTipoVacuna.getText().trim();
+
+        if (tipo.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Debe ingresar el tipo de vacuna a eliminar.");
+            return;
+        }
+
         boolean eliminada = vacunaControlador.eliminarVacunaPorTipo(nombre, tipo);
         if (eliminada) {
             JOptionPane.showMessageDialog(this, "Vacuna eliminada.");
@@ -128,6 +150,9 @@ public class PanelVacunas extends JInternalFrame {
         }
     }
 
+    /**
+     * Carga las vacunas en la tabla desde la lista persistida
+     */
     private void cargarVacunasEnTabla() {
         modeloTabla.setRowCount(0);
         List<VacunaDTO> vacunas = vacunaControlador.listarVacunas();
@@ -151,4 +176,11 @@ public class PanelVacunas extends JInternalFrame {
         txtProximaDosis.setText("");
     }
 
+    /**
+     * Refresca mascotas y vacunas al volver a mostrar el panel
+     */
+    public void refrescarDatos() {
+        cargarMascotasEnCombo();
+        cargarVacunasEnTabla();
+    }
 }

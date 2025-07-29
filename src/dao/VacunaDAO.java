@@ -20,29 +20,50 @@ public class VacunaDAO implements Serializable {
         if (!carpeta.exists()) {
             carpeta.mkdirs();
         }
-        this.vacunas = cargarVacunas(); // Inicializar lista
+        this.vacunas = cargarVacunas(); // Inicializar lista desde archivo
     }
 
+    /**
+     * Agregar una vacuna y guardar en archivo
+     */
+    public void agregarVacuna(VacunaDTO vacuna) {
+        vacunas.add(vacuna);
+        guardarVacunas(); // 🔹 Persistencia inmediata
+    }
+
+    /**
+     * Eliminar una vacuna por tipo para una mascota específica
+     */
     public boolean eliminarPorTipo(String nombreMascota, String tipo) {
         boolean eliminado = vacunas.removeIf(v ->
                 v.getNombreMascota().equalsIgnoreCase(nombreMascota) &&
-                        v.getTipoVacuna().equalsIgnoreCase(tipo));
+                        v.getTipoVacuna().equalsIgnoreCase(tipo)
+        );
         if (eliminado) {
-            guardarVacunas();
+            guardarVacunas(); // 🔹 Actualiza el archivo después de eliminar
         }
         return eliminado;
     }
 
-    public void agregarVacuna(VacunaDTO vacuna) {
-        vacunas.add(vacuna);
-    }
-
+    /**
+     * Guardar todas las vacunas en el archivo
+     */
     public void guardarVacunas() {
         gestor.guardarLista(archivo, vacunas);
     }
 
+    /**
+     * Cargar todas las vacunas desde el archivo
+     */
     public List<VacunaDTO> cargarVacunas() {
         List<VacunaDTO> lista = gestor.cargarLista(archivo);
         return (lista != null) ? lista : new ArrayList<>();
+    }
+
+    /**
+     * Obtener la lista actual de vacunas en memoria
+     */
+    public List<VacunaDTO> getVacunas() {
+        return new ArrayList<>(vacunas); // 🔹 Devuelve copia para evitar modificaciones externas
     }
 }
