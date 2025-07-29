@@ -7,8 +7,6 @@ import controlador.VeterinarioControlador;
 import dto.ConsultaDTO;
 import dto.PropietarioDTO;
 import dto.VacunaDTO;
-import dto.VeterinarioDTO;
-import modelo.Propietario;
 import modelo.Veterinario;
 
 import javax.swing.*;
@@ -67,6 +65,7 @@ public class PanelEventoClinico extends JInternalFrame {
         JButton btnRegistrarConsulta = new JButton("➕ Consulta");
         JButton btnRegistrarVacuna = new JButton("💉 Vacuna");
         JButton btnImprimir = new JButton("🖨 Imprimir");
+        JButton btnVistaPrevia = new JButton("👁 Vista Previa");
 
         panelSuperior.add(new JLabel("Mascota:"));
         panelSuperior.add(comboMascotas);
@@ -74,6 +73,7 @@ public class PanelEventoClinico extends JInternalFrame {
         panelSuperior.add(btnLimpiar);
         panelSuperior.add(btnRegistrarConsulta);
         panelSuperior.add(btnRegistrarVacuna);
+        panelSuperior.add(btnVistaPrevia);
         panelSuperior.add(btnImprimir);
 
         add(panelSuperior, BorderLayout.NORTH);
@@ -95,6 +95,7 @@ public class PanelEventoClinico extends JInternalFrame {
         btnImprimir.addActionListener(e -> imprimirEventoClinico(tabs.getSelectedIndex()));
         btnRegistrarConsulta.addActionListener(e -> abrirPanelConsulta());
         btnRegistrarVacuna.addActionListener(e -> abrirPanelVacuna());
+        btnVistaPrevia.addActionListener(e -> mostrarVistaPrevia(tabs.getSelectedIndex()));
 
         // Cargar datos iniciales
         cargarTablas();
@@ -263,6 +264,103 @@ public class PanelEventoClinico extends JInternalFrame {
             JOptionPane.showMessageDialog(this, "Error al imprimir: " + ex.getMessage());
         }
     }
+    private void mostrarVistaPrevia(int pestaña) {
+        StringBuilder reporte = new StringBuilder();
+        reporte.append("<html><body style='font-family:Arial; font-size:12px;'>");
+        reporte.append("<h2 style='text-align:center;'>🐶 Sistema de Gestión Clínica Veterinaria</h2>");
+        reporte.append("<h3 style='text-align:center;'>");
+
+        switch (pestaña) {
+            case 0 -> reporte.append("Reporte de Consultas");
+            case 1 -> reporte.append("Reporte de Vacunas");
+            case 2 -> reporte.append("Lista de Propietarios");
+            case 3 -> reporte.append("Lista de Veterinarios");
+            default -> reporte.append("Reporte");
+        }
+
+        reporte.append("</h3><hr><br>");
+
+        // Construir reporte según pestaña
+        switch (pestaña) {
+            case 0 -> { // Consultas
+                for (int i = 0; i < modeloConsultas.getRowCount(); i++) {
+                    reporte.append("<b>Código:</b> ").append(modeloConsultas.getValueAt(i, 0)).append("<br>");
+                    reporte.append("<b>Fecha:</b> ").append(modeloConsultas.getValueAt(i, 1)).append("<br>");
+                    reporte.append("<b>Mascota:</b> ").append(modeloConsultas.getValueAt(i, 2)).append("<br>");
+                    reporte.append("<b>Veterinario:</b> ").append(modeloConsultas.getValueAt(i, 3)).append("<br>");
+                    reporte.append("<b>Diagnóstico:</b> ").append(modeloConsultas.getValueAt(i, 4)).append("<br>");
+                    reporte.append("<hr>");
+                }
+            }
+            case 1 -> { // Vacunas
+                for (int i = 0; i < modeloVacunas.getRowCount(); i++) {
+                    reporte.append("<b>Mascota:</b> ").append(modeloVacunas.getValueAt(i, 0)).append("<br>");
+                    reporte.append("<b>Vacuna:</b> ").append(modeloVacunas.getValueAt(i, 1)).append("<br>");
+                    reporte.append("<b>Lote:</b> ").append(modeloVacunas.getValueAt(i, 2)).append("<br>");
+                    reporte.append("<b>Fecha:</b> ").append(modeloVacunas.getValueAt(i, 3)).append("<br>");
+                    reporte.append("<b>Próxima Dosis:</b> ").append(modeloVacunas.getValueAt(i, 4)).append("<br>");
+                    reporte.append("<hr>");
+                }
+            }
+            case 2 -> { // Propietarios
+                for (int i = 0; i < modeloPropietarios.getRowCount(); i++) {
+                    reporte.append("<b>ID:</b> ").append(modeloPropietarios.getValueAt(i, 0)).append("<br>");
+                    reporte.append("<b>Nombre:</b> ").append(modeloPropietarios.getValueAt(i, 1)).append("<br>");
+                    reporte.append("<b>Teléfono:</b> ").append(modeloPropietarios.getValueAt(i, 2)).append("<br>");
+                    reporte.append("<b>Dirección:</b> ").append(modeloPropietarios.getValueAt(i, 3)).append("<br>");
+                    reporte.append("<hr>");
+                }
+            }
+            case 3 -> { // Veterinarios
+                for (int i = 0; i < modeloVeterinarios.getRowCount(); i++) {
+                    reporte.append("<b>ID:</b> ").append(modeloVeterinarios.getValueAt(i, 0)).append("<br>");
+                    reporte.append("<b>Nombre:</b> ").append(modeloVeterinarios.getValueAt(i, 1)).append("<br>");
+                    reporte.append("<b>Especialidad:</b> ").append(modeloVeterinarios.getValueAt(i, 2)).append("<br>");
+                    reporte.append("<b>Disponible:</b> ").append(modeloVeterinarios.getValueAt(i, 3)).append("<br>");
+                    reporte.append("<hr>");
+                }
+            }
+        }
+
+        reporte.append("</body></html>");
+
+        // Editor HTML para vista previa
+        JEditorPane editor = new JEditorPane("text/html", reporte.toString());
+        editor.setEditable(false);
+
+        // Dialogo de vista previa
+        JDialog dialog = new JDialog(SwingUtilities.getWindowAncestor(this), "Vista Previa", Dialog.ModalityType.APPLICATION_MODAL);
+        dialog.setSize(750, 550);
+        dialog.setLocationRelativeTo(this);
+        dialog.add(new JScrollPane(editor), BorderLayout.CENTER);
+
+        // Panel de botones
+        JPanel panelBoton = new JPanel();
+
+        JButton btnImprimir = new JButton("🖨 Imprimir");
+        btnImprimir.addActionListener(e -> {
+            try {
+                boolean completo = editor.print(); // Imprime lo que ves
+                if (completo) {
+                    JOptionPane.showMessageDialog(dialog, "Impresión realizada correctamente.");
+                } else {
+                    JOptionPane.showMessageDialog(dialog, "Impresión cancelada.");
+                }
+            } catch (PrinterException ex) {
+                JOptionPane.showMessageDialog(dialog, "Error al imprimir: " + ex.getMessage());
+            }
+        });
+
+        JButton btnCerrar = new JButton("Cerrar");
+        btnCerrar.addActionListener(e -> dialog.dispose());
+
+        panelBoton.add(btnImprimir);
+        panelBoton.add(btnCerrar);
+
+        dialog.add(panelBoton, BorderLayout.SOUTH);
+        dialog.setVisible(true);
+    }
+
 
     // 🔹 Abrir paneles de registro reales
     private void abrirPanelConsulta() {
