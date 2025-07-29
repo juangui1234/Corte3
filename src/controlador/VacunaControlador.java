@@ -18,6 +18,7 @@ public class VacunaControlador {
         vacunaDAO = new VacunaDAO();
         // 🔹 Cargar vacunas desde archivo al iniciar
         vacunas = vacunaDAO.cargarVacunas();
+        vacunas = vacunaDAO.getVacunas();
     }
 
     // 🔹 Registrar y guardar en archivo
@@ -26,6 +27,7 @@ public class VacunaControlador {
         VacunaDTO nueva = new VacunaDTO(fecha, nombreMascota, descripcion, tipoVacuna, lote, proximaDosis);
         vacunas.add(nueva);
         vacunaDAO.agregarVacuna(nueva); // Guarda automáticamente
+        vacunas = vacunaDAO.getVacunas(); //refresca la lista
     }
 
     // 🔹 Eliminar vacuna por tipo para una mascota
@@ -35,6 +37,7 @@ public class VacunaControlador {
                         v.getTipoVacuna().equalsIgnoreCase(tipoVacuna)
         );
         if (eliminado) {
+            vacunas = vacunaDAO.getVacunas();
             vacunaDAO.eliminarPorTipo(nombreMascota, tipoVacuna);
         }
         return eliminado;
